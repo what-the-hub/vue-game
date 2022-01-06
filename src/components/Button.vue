@@ -1,5 +1,9 @@
 <template>
-  <button @click="action" class="btn" variant="outline-primary" :style="{background: color}">
+  <button @click="action"
+          class="btn"
+          variant="outline-primary"
+          :style="{background: color}"
+          :disabled = isDisabled>
     {{ title }}
   </button>
 </template>

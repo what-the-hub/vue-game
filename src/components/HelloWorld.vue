@@ -1,35 +1,35 @@
 <template>
   <div class="hello">
-    <Button :action=onClick color="red" title="hello" :disabled=isDisable />
+    <Button :action=onClick color="red" title="hello" :disabled="isDisable" />
   </div>
 </template>
 
 <script lang="ts">
 
 import Button from '@/components/Button.vue';
+import Vue from 'vue';
 
-export default {
-  /* eslint-disable */
+export default Vue.extend({
+
   name: 'HelloWorld',
+  data() {
+    return { tmp: false };
+  },
   components: {
     Button,
   },
 
   computed: {
-
-    /*    isDisable: ():boolean => {
-          return  true;
-        }*/
-  },
-  methods: {
-    onClick: function () {
-      alert('Hello')
-      debugger;
-      console.log(this)
-
+    isDisable(): boolean {
+      return this.tmp;
     },
   },
-};
+  methods: {
+    onClick() {
+      setTimeout(() => alert('Hello'), 2000);
+    },
+  },
+});
 </script>
 
 <style scoped lang="sass">
