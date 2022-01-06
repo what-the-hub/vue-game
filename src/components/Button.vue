@@ -1,25 +1,34 @@
 <template>
-  <b-button variant="outline-primary">
-    <slot>
-      {{ title }}
-    </slot>
-  </b-button>
+  <button @click="action" class="btn" variant="outline-primary" :style="{background: color}">
+    {{ title }}
+  </button>
 </template>
 <script lang="ts">
 export default {
   props: {
-    color: String,
-
+    color: {
+      type: String,
+      default: 'red',
+    },
     size: Number,
     title: {
       type: String,
       default: 'some title',
     },
-    isDisabled: Boolean,
-    action: Function,
+    isDisabled: {
+      type: Boolean,
+      default: false,
+    },
+    action: {
+      required: true,
+      type: Function,
+    },
   },
 };
 </script>
 
-<style lang="sass">
+<style scoped lang="sass">
+button
+  width: 300px
+  color: #ffffff
 </style>

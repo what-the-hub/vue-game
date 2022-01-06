@@ -1,20 +1,35 @@
 <template>
   <div class="hello">
-    <Button></Button>
+    <Button :action=onClick color="red" title="hello" :disabled=isDisable />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+
 import Button from '@/components/Button.vue';
 
-// eslint-disable-next-line no-use-before-define
-@Component({
-  components: { Button },
-})
-export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
-}
+export default {
+  /* eslint-disable */
+  name: 'HelloWorld',
+  components: {
+    Button,
+  },
+
+  computed: {
+
+    /*    isDisable: ():boolean => {
+          return  true;
+        }*/
+  },
+  methods: {
+    onClick: function () {
+      alert('Hello')
+      debugger;
+      console.log(this)
+
+    },
+  },
+};
 </script>
 
 <style scoped lang="sass">
