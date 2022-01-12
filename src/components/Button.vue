@@ -1,12 +1,12 @@
 <template>
   <button @click="action"
           class="btn"
-          variant="outline-primary"
           :style="{background: color}"
           :disabled = isDisabled>
     {{ title }}
   </button>
 </template>
+
 <script lang="ts">
 export default {
   props: {
