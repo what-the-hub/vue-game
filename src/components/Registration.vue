@@ -7,18 +7,25 @@
                class="form-control"
                id="mailInput"
                aria-describedby="emailHelp"
-               v-model="email"
-        >
+               v-model="email">
       </div>
+
       <div class="mb-3">
         <label for="passInput" class="form-label">Password</label>
-        <input type="password" class="form-control" id="passInput" v-model="password">
+        <input type="password"
+               class="form-control"
+               id="passInput"
+               v-model="password">
       </div>
+
       <button type="submit"
               class="btn btn-primary"
               @click="showEmail"
               :disabled="isDisabledButton"
-      >Submit</button>
+      >
+        Submit
+      </button>
+
       <div v-if="!isDataEmpty">
         <h3>EMAIL: {{receivedEmail}}</h3>
         <h3>PASSWORD: {{receivedPassword}}</h3>
