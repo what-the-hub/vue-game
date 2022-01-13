@@ -48,7 +48,9 @@ export default class Registration extends Vue {
   receivedPassword = ''
   isDataEmpty = true;
   isDisabled = true;
-  checkEmpty = (email: string, pass: string): boolean => email.length > 0 && pass.length > 0;
+  checkEmpty (email: string, pass: string): boolean {
+    return email.length > 0 && pass.length > 0
+  }
 
   get inputData (): UserInputData {
     return { email: this.email, password: this.password }
