@@ -40,15 +40,18 @@ import Component from 'vue-class-component'
 import { UserInputData } from '@/types'
 
 @Component
-
 export default class Registration extends Vue {
   email = ''
   password = ''
+
   receivedEmail = ''
   receivedPassword = ''
-  isDataEmpty = true;
-  isDisabled = true;
-  checkEmpty = (email: string, pass: string): boolean => email.length > 0 && pass.length > 0;
+
+  isDataEmpty = true
+  isDisabled = true
+  checkEmpty (email: string, pass: string): boolean {
+    return email.length > 0 && pass.length > 0
+  }
 
   get inputData (): UserInputData {
     return { email: this.email, password: this.password }
@@ -67,8 +70,14 @@ export default class Registration extends Vue {
     this.receivedPassword = this.password
     this.isDataEmpty = false
     this.isDisabled = false
+
+    this.$router.push({
+      name: 'About',
+      params: { email: this.receivedEmail, password: this.receivedPassword }
+    })
   }
 }
+
 </script>
 
 <style scoped lang="sass">
