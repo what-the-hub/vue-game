@@ -1,8 +1,11 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/sign-up">Registration</router-link>
+      |
+      <router-link
+        :to="{ name: 'About', params: { email: 'Empty email', password: 'Empty password'}}">About
+      </router-link>
     </div>
     <router-view/>
   </div>
