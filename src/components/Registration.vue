@@ -7,7 +7,14 @@
                class="form-control"
                id="mailInput"
                aria-describedby="emailHelp"
-               v-model="email">
+               v-model="email"
+               @change="checkEmail">
+        <p
+          class="error-message"
+          v-if="!errorEmail"
+        >
+          Something wrong with your e-mail, check it please
+        </p>
       </div>
 
       <div class="mb-3">
@@ -15,8 +22,15 @@
         <input type="password"
                class="form-control"
                id="passInput"
-               v-model="password">
+               v-model="password"
+               @change="checkPassword">
       </div>
+      <p
+        v-if="!errorPassword"
+        class="error-message"
+      >
+        Password must contain at least 8 characters, 1 number, 1 lower- and uppercase symbol
+      </p>
 
       <button type="submit"
               class="btn btn-primary"
@@ -37,7 +51,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { UserInputData } from '@/types'
+import { Errors, UserInputData } from '@/types'
+import { validateEmail, validatePassword } from '@/validators/helpers'
 
 @Component
 export default class Registration extends Vue {
@@ -49,8 +64,31 @@ export default class Registration extends Vue {
 
   isDataEmpty = true
   isDisabled = true
+
+  errors: Errors = { emailEr: true, passwordEr: true }
+
   checkEmpty (email: string, pass: string): boolean {
     return email.length > 0 && pass.length > 0
+  }
+
+  showEmail (): void {
+    this.receivedEmail = this.email
+    this.receivedPassword = this.password
+    this.isDataEmpty = false
+    this.isDisabled = false
+
+    this.$router.push({
+      name: 'About',
+      params: { email: this.receivedEmail, password: this.receivedPassword }
+    })
+  }
+
+  checkEmail () {
+    this.errors.emailEr = validateEmail(this.email)
+  }
+
+  checkPassword () {
+    this.errors.passwordEr = validatePassword(this.password)
   }
 
   get inputData (): UserInputData {
@@ -65,19 +103,14 @@ export default class Registration extends Vue {
     return this.isDisabled
   }
 
-  showEmail (): void {
-    this.receivedEmail = this.email
-    this.receivedPassword = this.password
-    this.isDataEmpty = false
-    this.isDisabled = false
+  get errorEmail () {
+    return this.errors.emailEr
+  }
 
-    this.$router.push({
-      name: 'About',
-      params: { email: this.receivedEmail, password: this.receivedPassword }
-    })
+  get errorPassword () {
+    return this.errors.passwordEr
   }
 }
-
 </script>
 
 <style scoped lang="sass">
@@ -87,4 +120,8 @@ export default class Registration extends Vue {
 
 label
   float: left
+
+.error-message
+  font-size: x-small
+  color: red
 </style>
