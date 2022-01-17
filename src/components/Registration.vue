@@ -55,6 +55,7 @@ export default class Registration extends Vue {
   password = ''
 
   isDisabled = true
+  // comment for the commit
 
   errors: Errors = { emailEr: true, passwordEr: true }
 
