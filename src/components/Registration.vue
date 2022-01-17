@@ -8,13 +8,21 @@
                id="mailInput"
                aria-describedby="emailHelp"
                v-model="email"
-               @change="checkEmail">
-        <p
-          class="error-message"
-          v-if="!errorEmail"
-        >
-          Something wrong with your e-mail, check it please
-        </p>
+               @blur="$v.email.$touch">
+
+        <div v-if="$v.email.$error" class="error-message">
+          <p
+            v-if="!$v.email.required"
+          >
+            Email required
+          </p>
+
+          <p
+            v-if="!$v.email.email"
+          >
+            Email must be a well-formed email address
+          </p>
+        </div>
       </div>
 
       <div class="mb-3">
@@ -23,19 +31,27 @@
                class="form-control"
                id="passInput"
                v-model="password"
-               @change="checkPassword">
+               @blur="$v.password.$touch">
+
+        <div v-if="$v.password.$error" class="error-message">
+          <p
+            v-if="!$v.password.required"
+          >
+            Password required
+          </p>
+
+          <p
+            v-if="!$v.password.validatePassword "
+          >
+            Password must contain at least 8 characters (up to 32), 1 number, 1 lower- and uppercase symbol
+          </p>
+        </div>
       </div>
-      <p
-        v-if="!errorPassword"
-        class="error-message"
-      >
-        Password must contain at least 8 characters, 1 number, 1 lower- and uppercase symbol
-      </p>
 
       <button type="submit"
               class="btn btn-primary"
-              @click="showEmail"
-              :disabled="isDisabledButton"
+              @click="redirectOnSubmit"
+              :disabled="$v.$error || !$v.$dirty"
       >
         Submit
       </button>
@@ -46,58 +62,36 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Errors, UserInputData } from '@/types'
-import { validateEmail, validatePassword } from '@/validators/helpers'
+import { validatePassword } from '@/validators/helpers'
+import { validationMixin } from 'vuelidate'
+import { required, email } from 'vuelidate/lib/validators'
 
-@Component
+@Component({
+  mixins: [validationMixin],
+  validations: {
+    password: {
+      required,
+      validatePassword
+    },
+    email: {
+      required,
+      email
+    }
+  }
+})
 export default class Registration extends Vue {
   email = ''
   password = ''
-
-  isDisabled = true
-  // comment for the commit
-
-  errors: Errors = { emailEr: true, passwordEr: true }
 
   checkEmpty (email: string, pass: string): boolean {
     return email.length > 0 && pass.length > 0
   }
 
-  showEmail (): void {
-    this.isDisabled = false
-
+  redirectOnSubmit (): void {
     this.$router.push({
       name: 'About',
       params: { email: this.email, password: this.password }
     })
-  }
-
-  checkEmail () {
-    this.errors.emailEr = validateEmail(this.email)
-  }
-
-  checkPassword () {
-    this.errors.passwordEr = validatePassword(this.password)
-  }
-
-  get inputData (): UserInputData {
-    return { email: this.email, password: this.password }
-  }
-
-  get isDisabledButton (): boolean {
-    const { email, password } = this.inputData
-    if (this.checkEmpty(email, password)) {
-      return !this.isDisabled
-    }
-    return this.isDisabled
-  }
-
-  get errorEmail () {
-    return this.errors.emailEr
-  }
-
-  get errorPassword () {
-    return this.errors.passwordEr
   }
 }
 </script>
@@ -111,6 +105,8 @@ label
   float: left
 
 .error-message
-  font-size: x-small
-  color: red
+  p
+    margin-top: 10px
+    font-size: x-small
+    color: red
 </style>
