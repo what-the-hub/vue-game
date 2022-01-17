@@ -39,11 +39,6 @@
       >
         Submit
       </button>
-
-      <div v-if="!isDataEmpty">
-        <h3>EMAIL: {{ receivedEmail }}</h3>
-        <h3>PASSWORD: {{ receivedPassword }}</h3>
-      </div>
     </form>
   </div>
 </template>
@@ -59,10 +54,6 @@ export default class Registration extends Vue {
   email = ''
   password = ''
 
-  receivedEmail = ''
-  receivedPassword = ''
-
-  isDataEmpty = true
   isDisabled = true
 
   errors: Errors = { emailEr: true, passwordEr: true }
@@ -72,14 +63,11 @@ export default class Registration extends Vue {
   }
 
   showEmail (): void {
-    this.receivedEmail = this.email
-    this.receivedPassword = this.password
-    this.isDataEmpty = false
     this.isDisabled = false
 
     this.$router.push({
       name: 'About',
-      params: { email: this.receivedEmail, password: this.receivedPassword }
+      params: { email: this.email, password: this.password }
     })
   }
 
