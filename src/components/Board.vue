@@ -59,7 +59,6 @@ checkTouch = (item: any) => {
         await this.delay(this.block.getRandom().timeout)
         this.gameFlow?.appendChild(elements[i])
       }
-
       elements[i].addEventListener('animationend', () => {
         document.getElementById(elements[i].id)?.remove()
       })
