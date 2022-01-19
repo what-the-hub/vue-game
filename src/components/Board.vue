@@ -1,7 +1,7 @@
 <template>
-  <div id="game">
+  <div id="game" ref="game">
     <div id="score">0</div>
-    <button class="button-start" onclick="startGame()">start</button>
+    <button class="button-start" @click="startGame">start</button>
     <div id="touch-area">
       <div id="good">
         <div id="excellent">
@@ -9,7 +9,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script lang="ts">
@@ -20,43 +19,42 @@ import { Block } from '@/types'
 
 @Component
 export default class Board extends Vue {
-  gameFlow: any = document.getElementById('game')
-
+  gameFlow = document.getElementById('game')
   scoreElement = document.getElementById('score')
-
   scoreCounter: number = 0
-
-  gameFlowHeight = parseInt(window.getComputedStyle(this.gameFlow).getPropertyValue('height'))
-
+  gameFlowHeight = 600
   block = new Block()
 
-checkTouch = (item: any) => {
-  const itemPosition = parseInt(window.getComputedStyle(item).getPropertyValue('top'))
-  const grMinHeight = 90
-  const grMaxHeight = 60
-  const goodMinHeight = 110
-  const goodMaxHeight = 30
-  const greatArea = itemPosition >= this.gameFlowHeight - grMinHeight && itemPosition <= this.gameFlowHeight - grMaxHeight
-  const goodArea = itemPosition >= this.gameFlowHeight - goodMinHeight && itemPosition <= this.gameFlowHeight - goodMaxHeight
+  checkTouch (item: any) {
+    const itemPosition = parseInt(window.getComputedStyle(item).getPropertyValue('top'))
+    const grMinHeight = 90
+    const grMaxHeight = 60
+    const goodMinHeight = 110
+    const goodMaxHeight = 30
+    const greatArea = itemPosition >= this.gameFlowHeight - grMinHeight && itemPosition <= this.gameFlowHeight - grMaxHeight
+    const goodArea = itemPosition >= this.gameFlowHeight - goodMinHeight && itemPosition <= this.gameFlowHeight - goodMaxHeight
 
-  if (greatArea) {
-    this.scoreCounter += 2
-  } else if (goodArea) {
-    this.scoreCounter += 1
+    if (greatArea) {
+      this.scoreCounter += 2
+    } else if (goodArea) {
+      this.scoreCounter += 1
+    }
+  this.scoreElement!.textContent = this.scoreCounter.toString()
   }
-    this.scoreElement!.textContent = this.scoreCounter.toString()
-}
 
   delay = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
   renderBlocks = async (elements: any) => {
+    console.log('in')
     for (let i = 0; i < elements.length; i += 1) {
       if (i === 0) {
         this.gameFlow?.appendChild(elements[i])
+        console.log(elements[i])
       } else {
         await this.delay(this.block.getRandom().timeout)
+        console.log(elements[i])
         this.gameFlow?.appendChild(elements[i])
       }
 
@@ -66,30 +64,30 @@ checkTouch = (item: any) => {
     }
   }
 
-startGame = () => {
-  console.log('the game is on')
-  const elements = []
-  for (let i = 1; i <= this.block.getRandom().elements; i += 1) {
-    elements.push(new Block().createItem())
+  startGame () {
+    console.log('the game is on')
+    const elements = []
+    for (let i = 1; i <= this.block.getRandom().elements; i += 1) {
+      elements.push(new Block().createItem())
+    }
+    console.log(elements)
+    this.renderBlocks(elements)
+    document.addEventListener('keydown', this.logKey)
   }
-  this.renderBlocks(elements)
-  document.addEventListener('keydown', this.logKey)
-}
 
-logKey (e: any) {
-  const key: any = e.key
-  const keyToColumn: any = {
-    ArrowLeft: document.getElementsByClassName('left-arrow'),
-    ArrowUp: document.getElementsByClassName('up-arrow'),
-    ArrowDown: document.getElementsByClassName('down-arrow'),
-    ArrowRight: document.getElementsByClassName('right-arrow')
+  logKey (e: KeyboardEvent) {
+    const key: any = e.key
+    const keyToColumn: any = {
+      ArrowLeft: document.getElementsByClassName('left-arrow'),
+      ArrowUp: document.getElementsByClassName('up-arrow'),
+      ArrowDown: document.getElementsByClassName('down-arrow'),
+      ArrowRight: document.getElementsByClassName('right-arrow')
+    }
+    if (keyToColumn[key] && keyToColumn[key].length > 0) {
+      this.checkTouch(keyToColumn[key][0])
+    } else return null
   }
-  if (keyToColumn[key] && keyToColumn[key].length > 0) {
-    this.checkTouch(keyToColumn[key][0])
-  } else return null
 }
-}
-
 </script>
 
 <style scoped lang="sass">

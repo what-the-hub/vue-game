@@ -15,7 +15,7 @@ export class Block {
   createItem () {
     const newItem = document.createElement('div')
     newItem.setAttribute('class', `${this.className} drop-block`)
-    newItem.setAttribute('id', `${this.id}`)
+    /*    newItem.setAttribute('id', `${Date.now}`) */
     return newItem
   }
 
