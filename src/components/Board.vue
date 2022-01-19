@@ -8,22 +8,29 @@
         </div>
       </div>
     </div>
+    <Arrow v-if="counts"></Arrow>
   </div>
 </template>
 
 <script lang="ts">
 
 import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Component } from 'vue-property-decorator'
 import { Block } from '@/types'
+import Arrow from '@/gameComponents/Arrow.vue'
 
-@Component
+@Component({
+  components: {
+    Arrow
+  }
+})
 export default class Board extends Vue {
   gameFlow = document.getElementById('game')
   scoreElement = document.getElementById('score')
   scoreCounter: number = 0
   gameFlowHeight = 600
   block = new Block()
+  counts: number = 0
 
   checkTouch (item: any) {
     const itemPosition = parseInt(window.getComputedStyle(item).getPropertyValue('top'))
@@ -65,6 +72,7 @@ export default class Board extends Vue {
   }
 
   startGame () {
+    this.counts += 1
     console.log('the game is on')
     const elements = []
     for (let i = 1; i <= this.block.getRandom().elements; i += 1) {

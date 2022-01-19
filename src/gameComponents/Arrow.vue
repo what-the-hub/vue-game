@@ -7,17 +7,22 @@
 <script lang="ts">
 
 import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Emit } from 'vue-property-decorator'
+import { Emit, Component } from 'vue-property-decorator'
 
 @Component
-export default class Board extends Vue {
+export default class Arrow extends Vue {
   @Emit('el-id')
   getId () {
     return Date.now()
   }
 
+  @Emit('arr-direction')
+  getArrow () {
+    return this.arrowDirection
+  }
+
   arrowDirections = ['left-arrow', 'up-arrow', 'down-arrow', 'right-arrow']
+  arrowDirection = this.arrowDirections[Math.floor(Math.random() * this.arrowDirections.length)]
 }
 </script>
 
