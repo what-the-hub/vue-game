@@ -3,6 +3,8 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
 import Registration from '@/components/Registration.vue'
 import About from '@/views/About.vue'
+import Board from '@/components/Board.vue'
+import Arrow from '@/gameComponents/Arrow.vue'
 
 Vue.use(VueRouter)
 
@@ -16,6 +18,16 @@ const routes: Array<RouteConfig> = [
     path: '/sign-up',
     name: 'Registration',
     component: Registration
+  },
+  {
+    path: '/game',
+    name: 'Game',
+    component: Board
+  },
+  {
+    path: '/arrow',
+    name: 'Arrow',
+    component: Arrow
   },
   {
     path: '/about',
