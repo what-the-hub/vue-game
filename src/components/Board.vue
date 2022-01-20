@@ -8,7 +8,7 @@
         </div>
       </div>
     </div>
-    <Arrow v-if="counts"></Arrow>
+    <Arrow id="$emit from arrow" style="%emits from" v-if="counts"></Arrow>
   </div>
 </template>
 

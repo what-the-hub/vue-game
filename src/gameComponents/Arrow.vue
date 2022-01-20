@@ -1,5 +1,5 @@
 <template>
-  <div id="game" ref="game">
+  <div :id="id" :class="className">
 
   </div>
 </template>
@@ -11,13 +11,21 @@ import Component from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 
 @Component
-export default class Board extends Vue {
-  @Emit('el-id')
-  getId () {
-    return Date.now()
-  }
+export default class Arrow extends Vue {
+  id = Date.now()
 
   arrowDirections = ['left-arrow', 'up-arrow', 'down-arrow', 'right-arrow']
+  className = this.arrowDirections[Math.floor(Math.random() * this.arrowDirections.length)]
+
+  @Emit('el-id')
+  getId () {
+    return this.id
+  }
+
+  @Emit('el-class')
+  getDirection () {
+    return this.className
+  }
 }
 </script>
 
