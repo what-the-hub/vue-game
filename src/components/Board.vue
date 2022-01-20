@@ -1,5 +1,5 @@
 <template>
-  <div id="game" ref="game">
+  <div id="game">
     <div id="score">0</div>
     <button class="button-start" @click="startGame">start</button>
     <div id="touch-area">
@@ -8,7 +8,6 @@
         </div>
       </div>
     </div>
-    <Arrow v-if="counts"></Arrow>
   </div>
 </template>
 
@@ -17,13 +16,8 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { Block } from '@/types'
-import Arrow from '@/gameComponents/Arrow.vue'
 
-@Component({
-  components: {
-    Arrow
-  }
-})
+@Component
 export default class Board extends Vue {
   gameFlow = document.getElementById('game')
   scoreElement = document.getElementById('score')
@@ -53,20 +47,17 @@ export default class Board extends Vue {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  renderBlocks = async (elements: any) => {
-    console.log('in')
+  renderBlocks = async (elements: any) => { // function will be deleted
     for (let i = 0; i < elements.length; i += 1) {
       if (i === 0) {
-        this.gameFlow?.appendChild(elements[i])
-        console.log(elements[i])
+        this.gameFlow?.appendChild(elements[i]) // components will be added using VUE methods
       } else {
         await this.delay(this.block.getRandom().timeout)
-        console.log(elements[i])
         this.gameFlow?.appendChild(elements[i])
       }
 
       elements[i].addEventListener('animationend', () => {
-        document.getElementById(elements[i].id)?.remove()
+        document.getElementById(elements[i].id)?.remove() // components will be deleted using VUE methods
       })
     }
   }
@@ -78,7 +69,6 @@ export default class Board extends Vue {
     for (let i = 1; i <= this.block.getRandom().elements; i += 1) {
       elements.push(new Block().createItem())
     }
-    console.log(elements)
     this.renderBlocks(elements)
     document.addEventListener('keydown', this.logKey)
   }
