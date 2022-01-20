@@ -1,6 +1,7 @@
 <template>
   <div id="game" ref="game">
     <div id="score">0</div>
+    <div>{{id}}</div>
     <button class="button-start" @click="startGame">start</button>
     <div id="touch-area">
       <div id="good">
@@ -8,7 +9,7 @@
         </div>
       </div>
     </div>
-    <Arrow id="$emit from arrow" style="%emits from" v-if="counts"></Arrow>
+    <arrow v-if="counts" @el-id='id'></arrow>
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import Arrow from '@/gameComponents/Arrow.vue'
   }
 })
 export default class Board extends Vue {
+  id: number = 0
   gameFlow = document.getElementById('game')
   scoreElement = document.getElementById('score')
   scoreCounter: number = 0
@@ -74,6 +76,7 @@ export default class Board extends Vue {
   startGame () {
     this.counts += 1
     console.log('the game is on')
+
     const elements = []
     for (let i = 1; i <= this.block.getRandom().elements; i += 1) {
       elements.push(new Block().createItem())
