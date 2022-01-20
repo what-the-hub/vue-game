@@ -7,7 +7,22 @@
                class="form-control"
                id="mailInput"
                aria-describedby="emailHelp"
-               v-model="email">
+               v-model="email"
+               @blur="$v.email.$touch">
+
+        <div v-if="$v.email.$error" class="error-message">
+          <p
+            v-if="!$v.email.required"
+          >
+            Email required
+          </p>
+
+          <p
+            v-if="!$v.email.email"
+          >
+            Email must be a well-formed email address
+          </p>
+        </div>
       </div>
 
       <div class="mb-3">
@@ -15,21 +30,31 @@
         <input type="password"
                class="form-control"
                id="passInput"
-               v-model="password">
+               v-model="password"
+               @blur="$v.password.$touch">
+
+        <div v-if="$v.password.$error" class="error-message">
+          <p
+            v-if="!$v.password.required"
+          >
+            Password required
+          </p>
+
+          <p
+            v-if="!$v.password.validatePassword "
+          >
+            Password must contain at least 8 characters (up to 32), 1 number, 1 lower- and uppercase symbol
+          </p>
+        </div>
       </div>
 
       <button type="submit"
               class="btn btn-primary"
-              @click="showEmail"
-              :disabled="isDisabledButton"
+              @click="redirectOnSubmit"
+              :disabled="$v.$error || !$v.$dirty"
       >
         Submit
       </button>
-
-      <div v-if="!isDataEmpty">
-        <h3>EMAIL: {{ receivedEmail }}</h3>
-        <h3>PASSWORD: {{ receivedPassword }}</h3>
-      </div>
     </form>
   </div>
 </template>
@@ -37,47 +62,38 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { UserInputData } from '@/types'
+import { validatePassword } from '@/validators/helpers'
+import { validationMixin } from 'vuelidate'
+import { required, email } from 'vuelidate/lib/validators'
 
-@Component
+@Component({
+  mixins: [validationMixin],
+  validations: {
+    password: {
+      required,
+      validatePassword
+    },
+    email: {
+      required,
+      email
+    }
+  }
+})
 export default class Registration extends Vue {
   email = ''
   password = ''
 
-  receivedEmail = ''
-  receivedPassword = ''
-
-  isDataEmpty = true
-  isDisabled = true
   checkEmpty (email: string, pass: string): boolean {
     return email.length > 0 && pass.length > 0
   }
 
-  get inputData (): UserInputData {
-    return { email: this.email, password: this.password }
-  }
-
-  get isDisabledButton (): boolean {
-    const { email, password } = this.inputData
-    if (this.checkEmpty(email, password)) {
-      return !this.isDisabled
-    }
-    return this.isDisabled
-  }
-
-  showEmail (): void {
-    this.receivedEmail = this.email
-    this.receivedPassword = this.password
-    this.isDataEmpty = false
-    this.isDisabled = false
-
+  redirectOnSubmit (): void {
     this.$router.push({
       name: 'About',
-      params: { email: this.receivedEmail, password: this.receivedPassword }
+      params: { email: this.email, password: this.password }
     })
   }
 }
-
 </script>
 
 <style scoped lang="sass">
@@ -87,4 +103,10 @@ export default class Registration extends Vue {
 
 label
   float: left
+
+.error-message
+  p
+    margin-top: 10px
+    font-size: x-small
+    color: red
 </style>
