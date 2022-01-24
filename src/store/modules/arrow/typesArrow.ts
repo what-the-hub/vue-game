@@ -13,8 +13,8 @@ export enum EActionArrow {
 }
 
 export interface IStateArrow {
-  id: number;
-  direction: EDirection
+  id: number | null
+  direction: EDirection | null
 }
 
 export type Mutations<S = IStateArrow> = {
