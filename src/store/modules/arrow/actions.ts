@@ -3,9 +3,10 @@ import { Actions, EActionArrow, EMutationArrow, IStateArrow } from '@/store/modu
 import { RootStateInterface } from '@/store/types'
 
 export const actions: ActionTree<IStateArrow, RootStateInterface> & Actions = {
-  [EActionArrow.ADD_DATA]: ({ commit, dispatch }, payload) => {
-    console.log('added', commit)
-    const payloadData = payload
-    commit(EMutationArrow.SET_DATA, payloadData)
+  [EActionArrow.ADD_DATA]: ({
+    commit
+  }, payload) => {
+    console.log('added', payload)
+    commit(EMutationArrow.SET_DATA, payload)
   }
 }

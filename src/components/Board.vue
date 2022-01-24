@@ -3,7 +3,7 @@
     <div id="score">0</div>
     <div>{{id}}</div>
     <button class="button-start" @click="startGame">start</button>
-    <button class="button-start" @click="eventChild" style="margin-top: 60px">test</button>
+    <button class="button-start" @click="checkStore" style="margin-top: 60px">test</button>
     <div id="touch-area">
       <div id="good">
         <div id="excellent">
@@ -22,6 +22,7 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { Block } from '@/types'
 import Arrow from '@/gameComponents/Arrow.vue'
+import { arrowStore } from '@/store/modules/arrow/arrow'
 
 @Component({
   components: {
@@ -38,8 +39,12 @@ export default class Board extends Vue {
   counts: number = 0
 
   eventChild (value: any) {
-    console.log('parrent foo work', value)
+    console.log('parent foo work', value)
     this.id = value
+  }
+
+  checkStore () {
+    alert(JSON.stringify(arrowStore.state))
   }
 
   checkTouch (item: any) {
@@ -86,7 +91,6 @@ export default class Board extends Vue {
     for (let i = 1; i <= this.block.getRandom().elements; i += 1) {
       elements.push(new Block().createItem())
     }
-    console.log(elements)
     this.renderBlocks(elements)
     document.addEventListener('keydown', this.logKey)
   }

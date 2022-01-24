@@ -12,6 +12,7 @@ import Component from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 import { EActionArrow } from '@/store/modules/arrow/typesArrow'
 import { arrowStore } from '@/store/modules/arrow/arrow'
+import { StoreModuleEnum } from '@/store/types'
 
 @Component
 export default class Arrow extends Vue {
@@ -23,7 +24,7 @@ export default class Arrow extends Vue {
   mounted () {
     this.getId()
     console.log('before', arrowStore.state)
-    this.$store.commit(EActionArrow.ADD_DATA, { id: this.id, direction: this.className })
+    this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`, { id: this.id, direction: this.className })
     console.log('after')
   }
 
