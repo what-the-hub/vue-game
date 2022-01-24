@@ -1,5 +1,6 @@
 <template>
   <div :id="id" :class="className">
+    {{id}}
 
   </div>
 </template>
@@ -9,6 +10,8 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
+import { EActionArrow } from '@/store/modules/arrow/typesArrow'
+import { arrowStore } from '@/store/modules/arrow/arrow'
 
 @Component
 export default class Arrow extends Vue {
@@ -17,8 +20,16 @@ export default class Arrow extends Vue {
   arrowDirections = ['left-arrow', 'up-arrow', 'down-arrow', 'right-arrow']
   className = this.arrowDirections[Math.floor(Math.random() * this.arrowDirections.length)]
 
-  @Emit('el-id')
+  mounted () {
+    this.getId()
+    console.log('before', arrowStore.state)
+    this.$store.commit(EActionArrow.ADD_DATA, { id: this.id, direction: this.className })
+    console.log('after')
+  }
+
+  @Emit('testword')
   getId () {
+    console.log('emit works')
     return this.id
   }
 

@@ -1,11 +1,17 @@
-export interface UserInputData {
-  email: string;
-  password: string;
+export enum EDirection {
+  // eslint-disable-next-line no-unused-vars
+  Left = 'left-arrow',
+  // eslint-disable-next-line no-unused-vars
+  Up = 'up-arrow',
+  // eslint-disable-next-line no-unused-vars
+  Down = 'down-arrow',
+  // eslint-disable-next-line no-unused-vars
+  Right = 'right-arrow'
 }
 
-export interface Errors {
-  emailEr: RegExpMatchArray | boolean;
-  passwordEr: RegExpMatchArray | boolean;
+export interface IArrowData {
+  id: number;
+  direction: EDirection
 }
 
 export class Block {

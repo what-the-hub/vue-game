@@ -3,13 +3,16 @@
     <div id="score">0</div>
     <div>{{id}}</div>
     <button class="button-start" @click="startGame">start</button>
+    <button class="button-start" @click="eventChild" style="margin-top: 60px">test</button>
     <div id="touch-area">
       <div id="good">
         <div id="excellent">
         </div>
       </div>
     </div>
-    <arrow v-if="counts" @el-id='id'></arrow>
+    <arrow v-for="(n, index) in counts" :key="n" v-on:testword="eventChild">
+      {{index}}
+    </arrow>
   </div>
 </template>
 
@@ -26,13 +29,18 @@ import Arrow from '@/gameComponents/Arrow.vue'
   }
 })
 export default class Board extends Vue {
-  id: number = 0
+  id: any = 0
   gameFlow = document.getElementById('game')
   scoreElement = document.getElementById('score')
   scoreCounter: number = 0
   gameFlowHeight = 600
   block = new Block()
   counts: number = 0
+
+  eventChild (value: any) {
+    console.log('parrent foo work', value)
+    this.id = value
+  }
 
   checkTouch (item: any) {
     const itemPosition = parseInt(window.getComputedStyle(item).getPropertyValue('top'))
@@ -56,14 +64,11 @@ export default class Board extends Vue {
   }
 
   renderBlocks = async (elements: any) => {
-    console.log('in')
     for (let i = 0; i < elements.length; i += 1) {
       if (i === 0) {
         this.gameFlow?.appendChild(elements[i])
-        console.log(elements[i])
       } else {
         await this.delay(this.block.getRandom().timeout)
-        console.log(elements[i])
         this.gameFlow?.appendChild(elements[i])
       }
 
