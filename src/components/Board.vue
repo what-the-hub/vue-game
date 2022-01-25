@@ -4,14 +4,14 @@
     <div>{{id}}</div>
     <button class="button-start" @click="startGame">start</button>
     <button class="button-start" @click="checkStore" style="margin-top: 60px">test</button>
+    <button class="button-start" @click="removeItem" style="margin-top: 60px">remove</button>
     <div id="touch-area">
       <div id="good">
         <div id="excellent">
         </div>
       </div>
     </div>
-    <arrow v-for="(n, index) in counts" :key="n" v-on:testword="eventChild">
-      {{index}}
+    <arrow v-for="n in counts" :key="n" v-on:get-id="eventChild">
     </arrow>
   </div>
 </template>
@@ -45,6 +45,10 @@ export default class Board extends Vue {
 
   checkStore () {
     alert(JSON.stringify(arrowStore.state))
+  }
+
+  removeItem () {
+
   }
 
   checkTouch (item: any) {

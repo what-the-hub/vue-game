@@ -1,7 +1,6 @@
 <template>
   <div :id="id" :class="className">
     {{id}}
-
   </div>
 </template>
 
@@ -22,13 +21,17 @@ export default class Arrow extends Vue {
   className = this.arrowDirections[Math.floor(Math.random() * this.arrowDirections.length)]
 
   mounted () {
+    this.$el.addEventListener('animationend', () => {
+      this.$destroy()
+      this.$el.parentNode?.removeChild(this.$el)
+    })
     this.getId()
     console.log('before', arrowStore.state)
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`, { id: this.id, direction: this.className })
     console.log('after')
   }
 
-  @Emit('testword')
+  @Emit('get-id')
   getId () {
     console.log('emit works')
     return this.id
