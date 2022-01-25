@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-    <arrow v-for="n in counts" :key="n" v-on:get-id="eventChild">
+    <arrow ref="afterClick" v-for="n in counts" :key="n" v-on:get-id="eventChild">
     </arrow>
   </div>
 </template>
@@ -51,7 +51,7 @@ export default class Board extends Vue {
 
   }
 
-  checkTouch (item: any) {
+  /*  checkTouch (item: any) {
     const itemPosition = parseInt(window.getComputedStyle(item).getPropertyValue('top'))
     const grMinHeight = 90
     const grMaxHeight = 60
@@ -66,40 +66,18 @@ export default class Board extends Vue {
       this.scoreCounter += 1
     }
   this.scoreElement!.textContent = this.scoreCounter.toString()
-  }
+  } */
 
   delay = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  renderBlocks = async (elements: any) => {
-    for (let i = 0; i < elements.length; i += 1) {
-      if (i === 0) {
-        this.gameFlow?.appendChild(elements[i])
-      } else {
-        await this.delay(this.block.getRandom().timeout)
-        this.gameFlow?.appendChild(elements[i])
-      }
-
-      elements[i].addEventListener('animationend', () => {
-        document.getElementById(elements[i].id)?.remove()
-      })
-    }
-  }
-
   startGame () {
     this.counts += 1
     console.log('the game is on')
-
-    const elements = []
-    for (let i = 1; i <= this.block.getRandom().elements; i += 1) {
-      elements.push(new Block().createItem())
-    }
-    this.renderBlocks(elements)
-    document.addEventListener('keydown', this.logKey)
   }
 
-  logKey (e: KeyboardEvent) {
+/*  logKey (e: KeyboardEvent) {
     const key: any = e.key
     const keyToColumn: any = {
       ArrowLeft: document.getElementsByClassName('left-arrow'),
@@ -110,7 +88,7 @@ export default class Board extends Vue {
     if (keyToColumn[key] && keyToColumn[key].length > 0) {
       this.checkTouch(keyToColumn[key][0])
     } else return null
-  }
+  } */
 }
 </script>
 

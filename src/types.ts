@@ -1,12 +1,23 @@
 export enum EDirection {
   // eslint-disable-next-line no-unused-vars
-  Left = 'left-arrow',
+  ArrowLeft = 'left-arrow',
   // eslint-disable-next-line no-unused-vars
-  Up = 'up-arrow',
+  ArrowUp = 'up-arrow',
   // eslint-disable-next-line no-unused-vars
-  Down = 'down-arrow',
+  ArrowDown = 'down-arrow',
   // eslint-disable-next-line no-unused-vars
-  Right = 'right-arrow'
+  ArrowRight = 'right-arrow'
+}
+
+export enum EKeys {
+  // eslint-disable-next-line no-unused-vars
+  Left = 'ArrowLeft',
+  // eslint-disable-next-line no-unused-vars
+  Up = 'ArrowUp',
+  // eslint-disable-next-line no-unused-vars
+  Down = 'ArrowDown',
+  // eslint-disable-next-line no-unused-vars
+  Right = 'ArrowRight'
 }
 
 export interface IArrowData {

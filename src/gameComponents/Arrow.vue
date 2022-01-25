@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" :class="className">
+  <div :id="id" ref="test" :class="className">
     {{id}}
   </div>
 </template>
@@ -21,9 +21,11 @@ export default class Arrow extends Vue {
   className = this.arrowDirections[Math.floor(Math.random() * this.arrowDirections.length)]
 
   mounted () {
+    window.addEventListener('keydown', this.logKey)
     this.$el.addEventListener('animationend', () => {
       this.$destroy()
-      this.$el.parentNode?.removeChild(this.$el)
+      this.removeElement()
+      window.removeEventListener('keydown', this.logKey)
     })
     this.getId()
     console.log('before', arrowStore.state)
@@ -40,6 +42,25 @@ export default class Arrow extends Vue {
   @Emit('el-class')
   getDirection () {
     return this.className
+  }
+
+  logKey (e: KeyboardEvent): void {
+    // eslint-disable-next-line no-unused-vars
+    const key: string = e.key
+    const keyMap: {[index: string]: string} = {
+      ArrowLeft: 'left-arrow',
+      ArrowUp: 'up-arrow',
+      ArrowDown: 'down-arrow',
+      ArrowRight: 'right-arrow'
+    }
+    if (keyMap[key] === this.className) {
+      console.log('yes')
+      console.log(this.$el.getBoundingClientRect().top)
+    }
+  }
+
+  removeElement () {
+    this.$el.parentNode?.removeChild(this.$el)
   }
 }
 </script>
