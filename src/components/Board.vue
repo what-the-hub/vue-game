@@ -4,7 +4,6 @@
     <div>{{id}}</div>
     <button class="button-start" @click="startGame">start</button>
     <button class="button-start" @click="checkStore" style="margin-top: 60px">test</button>
-    <button class="button-start" @click="removeItem" style="margin-top: 60px">remove</button>
     <div id="touch-area">
       <div id="good">
         <div id="excellent">
@@ -39,16 +38,11 @@ export default class Board extends Vue {
   counts: number = 0
 
   eventChild (value: any) {
-    console.log('parent foo work', value)
     this.id = value
   }
 
   checkStore () {
     alert(JSON.stringify(arrowStore.state))
-  }
-
-  removeItem () {
-
   }
 
   /*  checkTouch (item: any) {
@@ -76,19 +70,6 @@ export default class Board extends Vue {
     this.counts += 1
     console.log('the game is on')
   }
-
-/*  logKey (e: KeyboardEvent) {
-    const key: any = e.key
-    const keyToColumn: any = {
-      ArrowLeft: document.getElementsByClassName('left-arrow'),
-      ArrowUp: document.getElementsByClassName('up-arrow'),
-      ArrowDown: document.getElementsByClassName('down-arrow'),
-      ArrowRight: document.getElementsByClassName('right-arrow')
-    }
-    if (keyToColumn[key] && keyToColumn[key].length > 0) {
-      this.checkTouch(keyToColumn[key][0])
-    } else return null
-  } */
 }
 </script>
 

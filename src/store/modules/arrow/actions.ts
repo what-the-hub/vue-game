@@ -6,7 +6,6 @@ export const actions: ActionTree<IStateArrow, RootStateInterface> & Actions = {
   [EActionArrow.ADD_DATA]: ({
     commit
   }, payload) => {
-    console.log('added', payload)
     commit(EMutationArrow.SET_DATA, payload)
   }
 }

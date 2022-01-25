@@ -10,7 +10,6 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 import { EActionArrow } from '@/store/modules/arrow/typesArrow'
-import { arrowStore } from '@/store/modules/arrow/arrow'
 import { StoreModuleEnum } from '@/store/types'
 
 @Component
@@ -28,14 +27,11 @@ export default class Arrow extends Vue {
       window.removeEventListener('keydown', this.logKey)
     })
     this.getId()
-    console.log('before', arrowStore.state)
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`, { id: this.id, direction: this.className })
-    console.log('after')
   }
 
   @Emit('get-id')
   getId () {
-    console.log('emit works')
     return this.id
   }
 
@@ -45,7 +41,6 @@ export default class Arrow extends Vue {
   }
 
   logKey (e: KeyboardEvent): void {
-    // eslint-disable-next-line no-unused-vars
     const key: string = e.key
     const keyMap: {[index: string]: string} = {
       ArrowLeft: 'left-arrow',
