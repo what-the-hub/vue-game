@@ -1,6 +1,6 @@
 <template>
   <div :id="id" ref="test" :class="className">
-    {{id}}
+    {{ id }}
   </div>
 </template>
 
@@ -28,7 +28,10 @@ export default class Arrow extends Vue {
       window.removeEventListener('keydown', this.logKey)
     })
     this.getId()
-    this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`, { id: this.id, direction: this.className })
+    this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`, {
+      id: this.id,
+      direction: this.className
+    })
   }
 
   @Emit('get-id')
@@ -43,17 +46,40 @@ export default class Arrow extends Vue {
 
   logKey (e: KeyboardEvent): void {
     const key: string = e.key
-    const keyMap: {[index: string]: string} = {
+    const keyMap: { [index: string]: string } = {
       ArrowLeft: 'left-arrow',
       ArrowUp: 'up-arrow',
       ArrowDown: 'down-arrow',
       ArrowRight: 'right-arrow'
     }
     if (keyMap[key] === this.className) {
-      console.log('yes')
-      this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, 1)
+      this.checkTouch()
+      // this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, 1)
       console.log(this.$el.getBoundingClientRect().top)
     }
+  }
+
+  checkTouch () {
+    const itemPosition: number = this.$el.getBoundingClientRect().top
+    const gameFlowHeight: number = 600
+    const positions: { [index: string]: number } = {
+      grMinHeight: 90,
+      grMaxHeight: 60,
+      goodMinHeight: 110,
+      goodMaxHeight: 30
+    }
+    const greatArea: boolean = itemPosition >= gameFlowHeight - positions.grMinHeight && itemPosition <= gameFlowHeight - positions.grMaxHeight
+    const goodArea: boolean = itemPosition >= gameFlowHeight - positions.goodMinHeight && itemPosition <= gameFlowHeight - positions.goodMaxHeight
+
+    if (greatArea) {
+      this.setScore(2)
+    } else if (goodArea) {
+      this.setScore(1)
+    }
+  }
+
+  setScore (point: number): void {
+    this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, point)
   }
 
   removeElement () {
