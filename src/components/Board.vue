@@ -1,6 +1,6 @@
 <template>
   <div id="game" ref="game">
-    <div id="score">0</div>
+    <div id="score">{{this.$store.state.scoreStore.score}}</div>
     <div>{{id}}</div>
     <button class="button-start" @click="startGame">start</button>
     <button class="button-start" @click="checkStore" style="margin-top: 60px">test</button>
@@ -19,7 +19,6 @@
 
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Block } from '@/types'
 import Arrow from '@/gameComponents/Arrow.vue'
 import { arrowStore } from '@/store/modules/arrow/arrow'
 
@@ -30,11 +29,6 @@ import { arrowStore } from '@/store/modules/arrow/arrow'
 })
 export default class Board extends Vue {
   id: any = 0
-  gameFlow = document.getElementById('game')
-  scoreElement = document.getElementById('score')
-  scoreCounter: number = 0
-  gameFlowHeight = 600
-  block = new Block()
   counts: number = 0
 
   eventChild (value: any) {
@@ -45,30 +39,29 @@ export default class Board extends Vue {
     alert(JSON.stringify(arrowStore.state))
   }
 
-  /*  checkTouch (item: any) {
-    const itemPosition = parseInt(window.getComputedStyle(item).getPropertyValue('top'))
-    const grMinHeight = 90
-    const grMaxHeight = 60
-    const goodMinHeight = 110
-    const goodMaxHeight = 30
-    const greatArea = itemPosition >= this.gameFlowHeight - grMinHeight && itemPosition <= this.gameFlowHeight - grMaxHeight
-    const goodArea = itemPosition >= this.gameFlowHeight - goodMinHeight && itemPosition <= this.gameFlowHeight - goodMaxHeight
-
-    if (greatArea) {
-      this.scoreCounter += 2
-    } else if (goodArea) {
-      this.scoreCounter += 1
-    }
-  this.scoreElement!.textContent = this.scoreCounter.toString()
-  } */
-
-  delay = (ms: number) => {
+  delay (ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  startGame () {
-    this.counts += 1
+  startGame (): void {
     console.log('the game is on')
+    this.counts += 1
+    const elementsCount: number = this.getRandom(5, 10)
+
+    this.renderBlocks(elementsCount)
+  }
+
+  getRandom (min: number, max: number): number {
+    return Math.floor((Math.random() * max - min) + min)
+  }
+
+  async renderBlocks (elements: number) {
+    for (let i = 1; i < elements; i += 1) {
+      console.log(elements)
+      await this.delay(this.getRandom(200, 2000))
+      this.counts += 1 // push with appendChild to parent ref render node el with el
+      console.log(this.counts)
+    }
   }
 }
 </script>
