@@ -1,5 +1,3 @@
-// import { IArrowData } from '@/types'
-
 import { IStateArrow } from '@/store/modules/arrow/typesArrow'
 import { actions } from '@/store/modules/arrow/actions'
 import { mutations } from '@/store/modules/arrow/mutations'

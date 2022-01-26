@@ -10,6 +10,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 import { EActionArrow } from '@/store/modules/arrow/typesArrow'
+import { EActionScore } from '@/store/modules/score/typesScore'
 import { StoreModuleEnum } from '@/store/types'
 
 @Component
@@ -50,6 +51,7 @@ export default class Arrow extends Vue {
     }
     if (keyMap[key] === this.className) {
       console.log('yes')
+      this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, 1)
       console.log(this.$el.getBoundingClientRect().top)
     }
   }
