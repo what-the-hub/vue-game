@@ -68,15 +68,14 @@ export default class Arrow extends Vue {
       ArrowRight: 'right-arrow'
     }
     if (keyMap[key] === this.className) {
-      this.checkTouch()
-      // this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, 1)
+      this.checkTouch(this.id)
     }
   }
 
-  checkTouch (): void {
+  checkTouch (id: number): void {
     const itemHeight: number = this.$el.clientHeight
     const itemPosition: number = this.$el.getBoundingClientRect().top + itemHeight / 2
-    console.log(itemPosition)
+
     if (!this.bProps) {
       console.log('error')
     } else {
@@ -97,6 +96,8 @@ export default class Arrow extends Vue {
         // this.removeListener()
         console.log('good')
         this.setScore(1)
+      } else if (id === parseInt(this.$el.id)) {
+        this.setScore(-1)
       }
     }
   }
