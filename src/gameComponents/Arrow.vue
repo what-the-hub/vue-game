@@ -8,30 +8,45 @@
 
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Emit } from 'vue-property-decorator'
+import { Emit, Prop } from 'vue-property-decorator'
 import { EActionArrow } from '@/store/modules/arrow/typesArrow'
 import { EActionScore } from '@/store/modules/score/typesScore'
 import { StoreModuleEnum } from '@/store/types'
+import { EDirection, IFlowProps } from '@/types'
 
 @Component
 export default class Arrow extends Vue {
-  id = Date.now()
+  id: number = Date.now()
+  @Prop(Object)
+  bProps: IFlowProps | undefined
 
-  arrowDirections = ['left-arrow', 'up-arrow', 'down-arrow', 'right-arrow']
-  className = this.arrowDirections[Math.floor(Math.random() * this.arrowDirections.length)]
+  arrowDirections: string[] = [
+    EDirection.ArrowLeft,
+    EDirection.ArrowUp,
+    EDirection.ArrowUp,
+    EDirection.ArrowRight
+  ]
+
+  className: string = this.arrowDirections[
+    Math.floor(Math.random() * this.arrowDirections.length)
+  ]
 
   mounted () {
     window.addEventListener('keydown', this.logKey)
     this.$el.addEventListener('animationend', () => {
       this.$destroy()
       this.removeElement()
-      window.removeEventListener('keydown', this.logKey)
+      this.removeListener()
     })
     this.getId()
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`, {
       id: this.id,
       direction: this.className
     })
+  }
+
+  removeListener (): void {
+    window.removeEventListener('keydown', this.logKey)
   }
 
   @Emit('get-id')
@@ -55,26 +70,37 @@ export default class Arrow extends Vue {
     if (keyMap[key] === this.className) {
       this.checkTouch()
       // this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, 1)
-      console.log(this.$el.getBoundingClientRect().top)
     }
   }
 
-  checkTouch () {
-    const itemPosition: number = this.$el.getBoundingClientRect().top
-    const gameFlowHeight: number = 600
-    const positions: { [index: string]: number } = {
-      grMinHeight: 90,
-      grMaxHeight: 60,
-      goodMinHeight: 110,
-      goodMaxHeight: 30
-    }
-    const greatArea: boolean = itemPosition >= gameFlowHeight - positions.grMinHeight && itemPosition <= gameFlowHeight - positions.grMaxHeight
-    const goodArea: boolean = itemPosition >= gameFlowHeight - positions.goodMinHeight && itemPosition <= gameFlowHeight - positions.goodMaxHeight
+  checkTouch (): void {
+    const itemHeight: number = this.$el.clientHeight
+    const itemPosition: number = this.$el.getBoundingClientRect().top + itemHeight / 2
+    console.log(itemPosition)
+    if (!this.bProps) {
+      console.log('error')
+    } else {
+      // const flowHeight: number | undefined = this.bProps?.flowHeight
+      const positions: { [index: string]: any } = {
+        exTop: this.bProps.exAreaTop,
+        exHeight: this.bProps.exAreaHeight,
+        exBottom: this.bProps.exAreaTop + this.bProps.exAreaHeight,
+        goodTop: this.bProps.goodArTop,
+        goodHeight: this.bProps.goodArHeight,
+        goodBottom: this.bProps.goodArTop + this.bProps.goodArHeight
+      }
+      const greatArea: boolean = itemPosition >= positions.exTop && itemPosition <= positions.exBottom
+      const goodArea: boolean = itemPosition >= positions.goodTop && itemPosition <= positions.goodBottom
 
-    if (greatArea) {
-      this.setScore(2)
-    } else if (goodArea) {
-      this.setScore(1)
+      if (greatArea) {
+        // this.removeListener()
+        console.log('great')
+        this.setScore(2)
+      } else if (goodArea) {
+        // this.removeListener()
+        console.log('good')
+        this.setScore(1)
+      }
     }
   }
 
@@ -82,7 +108,7 @@ export default class Arrow extends Vue {
     this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, point)
   }
 
-  removeElement () {
+  removeElement (): void {
     this.$el.parentNode?.removeChild(this.$el)
   }
 }

@@ -7,8 +7,6 @@ import {
 
 export const mutations: MutationTree<IStateScore> & Mutations = {
   [EMutationScore.SET_POINTS]: (state, payload) => {
-    console.log(state.score, 'before')
     state.score += payload
-    console.log(state.score, 'after')
   }
 }

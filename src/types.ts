@@ -25,6 +25,14 @@ export interface IArrowData {
   direction: EDirection
 }
 
+export interface IFlowProps {
+  flowHeight: number,
+  goodArHeight: number,
+  goodArTop: number,
+  exAreaHeight: number,
+  exAreaTop: number
+}
+
 export class Block {
   id = Date.now
   blockClasses = ['left-arrow', 'up-arrow', 'down-arrow', 'right-arrow']

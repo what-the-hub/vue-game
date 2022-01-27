@@ -1,16 +1,14 @@
 <template>
   <div id="game" ref="game">
-    <div id="score">{{this.$store.state.scoreStore.score}}</div>
-    <div>{{id}}</div>
+    <div id="score">
+      {{ this.$store.state.scoreStore.score }}
+    </div>
     <button class="button-start" @click="startGame">start</button>
-    <button class="button-start" @click="checkStore" style="margin-top: 60px">test</button>
-    <div id="touch-area">
-      <div id="good">
-        <div id="excellent">
-        </div>
+    <div id="good" ref="good">
+      <div id="excellent" ref="excellent">
       </div>
     </div>
-    <arrow ref="afterClick" v-for="n in counts" :key="n" v-on:get-id="eventChild">
+    <arrow :bProps="height" v-for="n in counts" :key="n" v-on:get-id="getChildId">
     </arrow>
   </div>
 </template>
@@ -20,7 +18,6 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import Arrow from '@/gameComponents/Arrow.vue'
-import { arrowStore } from '@/store/modules/arrow/arrow'
 
 @Component({
   components: {
@@ -31,12 +28,8 @@ export default class Board extends Vue {
   id: any = 0
   counts: number = 0
 
-  eventChild (value: any) {
+  getChildId (value: any) {
     this.id = value
-  }
-
-  checkStore () {
-    alert(JSON.stringify(arrowStore.state))
   }
 
   delay (ms: number) {
@@ -57,11 +50,25 @@ export default class Board extends Vue {
 
   async renderBlocks (elements: number) {
     for (let i = 1; i < elements; i += 1) {
-      console.log(elements)
       await this.delay(this.getRandom(200, 2000))
       this.counts += 1 // push with appendChild to parent ref render node el with el
       console.log(this.counts)
     }
+  }
+
+  get height () {
+    const goodArea: any = this.$refs.good
+    const exArea: any = this.$refs.excellent
+    return {
+      flowHeight: this.$el.clientHeight,
+      goodArHeight: goodArea.clientHeight,
+      goodArTop: goodArea.getBoundingClientRect().top,
+      exAreaHeight: exArea.clientHeight,
+      exAreaTop: exArea.getBoundingClientRect().top
+    }
+  }
+
+  mounted () {
   }
 }
 </script>
@@ -74,6 +81,7 @@ export default class Board extends Vue {
 #game
   width: 500px
   height: 600px
+  box-sizing: content-box
   border: 1px solid black
   margin: auto
   position: relative
@@ -84,24 +92,21 @@ export default class Board extends Vue {
   top: 0
   right: 0
 
-#touch-area
-  width: 500px
-  height: 100px
-  background-color: rgba(232, 255, 204, 0.5)
-  position: absolute
-  bottom: 0
-
 #good
-  position: relative
   background: rgb(255, 241, 0)
-  height: 80px
-  top: 0
+  height: 100px
+  width: 100%
+  position: absolute
+  bottom: 40px
+  display: flex
+  align-items: center
+  justify-content: center
 
 #excellent
-  position: relative
+  position: absolute
+  width: 100%
   background: rgb(126, 255, 0)
   height: 40px
-  top: 20px
 
 .left-arrow
   background-color: rgb(255, 0, 0)
@@ -182,5 +187,5 @@ export default class Board extends Vue {
   0%
     top: 0
   100%
-    top: 580px
+    top: 100%
 </style>
