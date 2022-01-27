@@ -8,7 +8,7 @@
       <div id="excellent" ref="excellent">
       </div>
     </div>
-    <arrow :bProps="height" v-for="n in counts" :key="n" v-on:get-id="getChildId">
+    <arrow :bProps="positions" v-for="n in counts" :key="n" v-on:get-id="getChildId">
     </arrow>
   </div>
 </template>
@@ -18,6 +18,7 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import Arrow from '@/gameComponents/Arrow.vue'
+import { IFlowProps } from '@/types'
 
 @Component({
   components: {
@@ -56,15 +57,14 @@ export default class Board extends Vue {
     }
   }
 
-  get height () {
+  get positions (): IFlowProps {
     const goodArea: any = this.$refs.good
     const exArea: any = this.$refs.excellent
     return {
-      flowHeight: this.$el.clientHeight,
-      goodArHeight: goodArea.clientHeight,
       goodArTop: goodArea.getBoundingClientRect().top,
-      exAreaHeight: exArea.clientHeight,
-      exAreaTop: exArea.getBoundingClientRect().top
+      goodArBottom: goodArea.getBoundingClientRect().bottom,
+      exAreaTop: exArea.getBoundingClientRect().top,
+      exAreaBottom: exArea.getBoundingClientRect().bottom
     }
   }
 
@@ -80,7 +80,7 @@ export default class Board extends Vue {
 
 #game
   width: 500px
-  height: 600px
+  height: 500px
   box-sizing: content-box
   border: 1px solid black
   margin: auto

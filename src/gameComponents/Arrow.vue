@@ -80,19 +80,16 @@ export default class Arrow extends Vue {
     if (!this.bProps) {
       console.log('error')
     } else {
-      // const flowHeight: number | undefined = this.bProps?.flowHeight
-      const positions: { [index: string]: any } = {
+      const positions: { [index: string]: number } = {
         exTop: this.bProps.exAreaTop,
-        exHeight: this.bProps.exAreaHeight,
-        exBottom: this.bProps.exAreaTop + this.bProps.exAreaHeight,
+        exBottom: this.bProps.exAreaBottom,
         goodTop: this.bProps.goodArTop,
-        goodHeight: this.bProps.goodArHeight,
-        goodBottom: this.bProps.goodArTop + this.bProps.goodArHeight
+        goodBottom: this.bProps.goodArBottom
       }
-      const greatArea: boolean = itemPosition >= positions.exTop && itemPosition <= positions.exBottom
+      const excellentArea: boolean = itemPosition >= positions.exTop && itemPosition <= positions.exBottom
       const goodArea: boolean = itemPosition >= positions.goodTop && itemPosition <= positions.goodBottom
 
-      if (greatArea) {
+      if (excellentArea) {
         // this.removeListener()
         console.log('great')
         this.setScore(2)
