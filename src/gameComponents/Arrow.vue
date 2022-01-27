@@ -17,8 +17,8 @@ import { EDirection, IFlowProps } from '@/types'
 @Component
 export default class Arrow extends Vue {
   id: number = Date.now()
-  @Prop(Object)
-  bProps: IFlowProps | undefined
+  @Prop()
+  bProps!: IFlowProps
 
   arrowDirections: string[] = [
     EDirection.ArrowLeft,
@@ -76,29 +76,21 @@ export default class Arrow extends Vue {
     const itemHeight: number = this.$el.clientHeight
     const itemPosition: number = this.$el.getBoundingClientRect().top + itemHeight / 2
 
-    if (!this.bProps) {
-      console.log('error')
-    } else {
-      const positions: { [index: string]: number } = {
-        exTop: this.bProps.exAreaTop,
-        exBottom: this.bProps.exAreaBottom,
-        goodTop: this.bProps.goodArTop,
-        goodBottom: this.bProps.goodArBottom
-      }
-      const excellentArea: boolean = itemPosition >= positions.exTop && itemPosition <= positions.exBottom
-      const goodArea: boolean = itemPosition >= positions.goodTop && itemPosition <= positions.goodBottom
+    const positions: { [index: string]: number } = {
+      exTop: this.bProps.exAreaTop,
+      exBottom: this.bProps.exAreaBottom,
+      goodTop: this.bProps.goodArTop,
+      goodBottom: this.bProps.goodArBottom
+    }
+    const excellentArea: boolean = itemPosition >= positions.exTop && itemPosition <= positions.exBottom
+    const goodArea: boolean = itemPosition >= positions.goodTop && itemPosition <= positions.goodBottom
 
-      if (excellentArea) {
-        // this.removeListener()
-        console.log('great')
-        this.setScore(2)
-      } else if (goodArea) {
-        // this.removeListener()
-        console.log('good')
-        this.setScore(1)
-      } else if (id === parseInt(this.$el.id)) {
-        this.setScore(-1)
-      }
+    if (excellentArea) {
+      console.log('great')
+      this.setScore(2)
+    } else if (goodArea) {
+      console.log('good')
+      this.setScore(1)
     }
   }
 
@@ -113,88 +105,4 @@ export default class Arrow extends Vue {
 </script>
 
 <style scoped lang="sass">
-*
-  padding: 0
-  margin: 0
-
-.left-arrow
-  background-color: rgb(255, 0, 0)
-  width: 20px
-  height: 20px
-  position: absolute
-  z-index: 10
-  top: 0
-  left: 20px
-  animation: block 5s linear
-
-.left-arrow::before
-  content: ''
-  border-top: 10px solid transparent
-  border-bottom: 10px solid transparent
-  border-right: 10px solid blue
-  position: absolute
-  right: 5px
-
-.up-arrow
-  background-color: rgb(255, 0, 0)
-  width: 20px
-  height: 20px
-  position: absolute
-  z-index: 10
-  top: 0
-  left: 200px
-  animation: block 5s linear
-
-.up-arrow::before
-  content: ''
-  border-top: 10px solid transparent
-  border-bottom: 10px solid blue
-  border-right: 10px solid transparent
-  border-left: 10px solid transparent
-  position: absolute
-  bottom: 5px
-
-.down-arrow
-  background-color: rgb(255, 0, 0)
-  width: 20px
-  height: 20px
-  position: absolute
-  z-index: 10
-  top: 0
-  left: 300px
-  animation: block 5s linear
-
-.down-arrow::before
-  content: ''
-  border-top: 10px solid blue
-  border-bottom: 10px solid transparent
-  border-right: 10px solid transparent
-  border-left: 10px solid transparent
-  position: absolute
-  top: 5px
-
-.right-arrow
-  background-color: rgb(255, 0, 0)
-  width: 20px
-  height: 20px
-  position: absolute
-  z-index: 10
-  top: 0
-  left: 400px
-  animation: block 5s linear
-
-.right-arrow::before
-  content: ''
-  border-top: 10px solid transparent
-  border-bottom: 10px solid transparent
-  border-right: 10px solid transparent
-  border-left: 10px solid blue
-  position: absolute
-  left: 5px
-
-@keyframes block
-  0%
-    top: 0
-  100%
-    top: 580px
 </style>

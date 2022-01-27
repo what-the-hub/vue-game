@@ -40,6 +40,7 @@ export default class Board extends Vue {
   startGame (): void {
     console.log('the game is on')
     this.counts += 1
+    console.log(this.id)
     const elementsCount: number = this.getRandom(5, 10)
 
     this.renderBlocks(elementsCount)
@@ -53,7 +54,7 @@ export default class Board extends Vue {
     for (let i = 1; i < elements; i += 1) {
       await this.delay(this.getRandom(200, 2000))
       this.counts += 1 // push with appendChild to parent ref render node el with el
-      console.log(this.counts)
+      // console.log(this.counts)
     }
   }
 
@@ -66,9 +67,6 @@ export default class Board extends Vue {
       exAreaTop: exArea.getBoundingClientRect().top,
       exAreaBottom: exArea.getBoundingClientRect().bottom
     }
-  }
-
-  mounted () {
   }
 }
 </script>
