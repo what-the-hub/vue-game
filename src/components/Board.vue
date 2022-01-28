@@ -4,6 +4,7 @@
       {{ this.$store.state.scoreStore.score }}
     </div>
     <button class="button-start" @click="startGame">start</button>
+    <button class="button-start" style="margin-top: 80px" @click="stopGame">stop</button>
     <div id="good" ref="good">
       <div id="excellent" ref="excellent">
       </div>
@@ -28,6 +29,13 @@ import { IFlowProps } from '@/types'
 export default class Board extends Vue {
   id: any = 0
   counts: number = 0
+  isPlay: boolean = false
+  randomDelay: number = 0
+  ind: number = 0
+
+  get isStillPlay () {
+    return this.isPlay
+  }
 
   getChildId (value: any) {
     this.id = value
@@ -39,6 +47,8 @@ export default class Board extends Vue {
 
   startGame (): void {
     console.log('the game is on')
+    this.isPlay = true
+    this.runRender()
     this.counts += 1
     console.log(this.id)
     const elementsCount: number = this.getRandom(5, 10)
@@ -46,8 +56,27 @@ export default class Board extends Vue {
     this.renderBlocks(elementsCount)
   }
 
+  runRender () {
+    this.ind += 1
+    const interval = setInterval(() => {
+      console.log('__')
+      clearInterval(interval)
+
+      if (this.ind < 1000 && this.isPlay) {
+        this.runRender()
+      } else {
+        console.log('stop')
+      }
+    }, this.getRandom(200, 2000))
+  }
+
+  stopGame (): void {
+    console.log('sss')
+    this.isPlay = false
+  }
+
   getRandom (min: number, max: number): number {
-    return Math.floor((Math.random() * max - min) + min)
+    return Math.floor((Math.random() * (max - min)) + min)
   }
 
   async renderBlocks (elements: number) {

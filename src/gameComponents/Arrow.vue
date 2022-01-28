@@ -1,6 +1,5 @@
 <template>
   <div :id="id" ref="test" :class="className">
-    {{ id }}
   </div>
 </template>
 
