@@ -12,13 +12,17 @@ export enum EActionArrow {
   ADD_DATA = 'ADD_DATA'
 }
 
-export interface IStateArrow {
+export interface IArrowData {
   id: number | null
   direction: EDirection | null
 }
 
+export interface IStateArrow {
+  arrowsData: IArrowData[]
+}
+
 export type Mutations<S = IStateArrow> = {
-  [EMutationArrow.SET_DATA](state: S, payload: IStateArrow): void
+  [EMutationArrow.SET_DATA](state: S, payload: IArrowData): void
 }
 
 export type AugmentedActionContext = {
@@ -29,5 +33,5 @@ export type AugmentedActionContext = {
 } & Omit<ActionContext<IStateArrow, RootStateInterface>, 'commit'>
 
 export interface Actions {
-  [EActionArrow.ADD_DATA]({ commit }: AugmentedActionContext, payload: IStateArrow): void
+  [EActionArrow.ADD_DATA]({ commit }: AugmentedActionContext): void
 }

@@ -8,7 +8,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Emit, Prop } from 'vue-property-decorator'
-import { EActionArrow } from '@/store/modules/arrow/typesArrow'
+// import { EActionArrow } from '@/store/modules/arrow/typesArrow'
 import { EActionScore } from '@/store/modules/score/typesScore'
 import { StoreModuleEnum } from '@/store/types'
 import { EDirection, IFlowProps } from '@/types'
@@ -22,7 +22,7 @@ export default class Arrow extends Vue {
   arrowDirections: string[] = [
     EDirection.ArrowLeft,
     EDirection.ArrowUp,
-    EDirection.ArrowUp,
+    EDirection.ArrowDown,
     EDirection.ArrowRight
   ]
 
@@ -31,21 +31,26 @@ export default class Arrow extends Vue {
   ]
 
   mounted () {
-    window.addEventListener('keydown', this.logKey)
+    this.getId()
     this.$el.addEventListener('animationend', () => {
+      this.deleteEmit()
       this.$destroy()
       this.removeElement()
-      this.removeListener()
     })
-    this.getId()
+    this.getData()
+    /*    this.getId()
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`, {
       id: this.id,
       direction: this.className
-    })
+    }) */
   }
 
   removeListener (): void {
-    window.removeEventListener('keydown', this.logKey)
+  }
+
+  @Emit('get-data')
+  getData () {
+    return { id: this.id, direction: this.className }
   }
 
   @Emit('get-id')
@@ -53,44 +58,9 @@ export default class Arrow extends Vue {
     return this.id
   }
 
-  @Emit('el-class')
-  getDirection () {
-    return this.className
-  }
-
-  logKey (e: KeyboardEvent): void {
-    const key: string = e.key
-    const keyMap: { [index: string]: string } = {
-      ArrowLeft: 'left-arrow',
-      ArrowUp: 'up-arrow',
-      ArrowDown: 'down-arrow',
-      ArrowRight: 'right-arrow'
-    }
-    if (keyMap[key] === this.className) {
-      this.checkTouch(this.id)
-    }
-  }
-
-  checkTouch (id: number): void {
-    const itemHeight: number = this.$el.clientHeight
-    const itemPosition: number = this.$el.getBoundingClientRect().top + itemHeight / 2
-
-    const positions: { [index: string]: number } = {
-      exTop: this.bProps.exAreaTop,
-      exBottom: this.bProps.exAreaBottom,
-      goodTop: this.bProps.goodArTop,
-      goodBottom: this.bProps.goodArBottom
-    }
-    const excellentArea: boolean = itemPosition >= positions.exTop && itemPosition <= positions.exBottom
-    const goodArea: boolean = itemPosition >= positions.goodTop && itemPosition <= positions.goodBottom
-
-    if (excellentArea) {
-      console.log('great')
-      this.setScore(2)
-    } else if (goodArea) {
-      console.log('good')
-      this.setScore(1)
-    }
+  @Emit('removed')
+  deleteEmit () {
+    return this.id
   }
 
   setScore (point: number): void {
