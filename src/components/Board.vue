@@ -14,6 +14,7 @@
       v-for="n in storeItems"
       :key="n.id"
       :class="n.direction"
+      :id="n.id"
     >
     </arrow>
   </div>

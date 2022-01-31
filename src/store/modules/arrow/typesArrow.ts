@@ -4,12 +4,16 @@ import { RootStateInterface } from '@/store/types'
 
 export enum EMutationArrow {
   // eslint-disable-next-line no-unused-vars
-  SET_DATA = 'SET_DATA'
+  SET_DATA = 'SET_DATA',
+  // eslint-disable-next-line no-unused-vars
+  UPDATE_DATA = 'UPDATE_DATA'
 }
 
 export enum EActionArrow {
   // eslint-disable-next-line no-unused-vars
-  ADD_DATA = 'ADD_DATA'
+  ADD_DATA = 'ADD_DATA',
+  // eslint-disable-next-line no-unused-vars
+  DELETE_ARROW = 'DELETE_ARROW'
 }
 
 export enum EGetterArrow {
@@ -28,6 +32,7 @@ export interface IStateArrow {
 
 export type Mutations<S = IStateArrow> = {
   [EMutationArrow.SET_DATA](state: S, payload: IArrowData): void
+  [EMutationArrow.UPDATE_DATA](state: S, payload: IArrowData): void
 }
 
 export type AugmentedActionContext = {
@@ -38,7 +43,8 @@ export type AugmentedActionContext = {
 } & Omit<ActionContext<IStateArrow, RootStateInterface>, 'commit'>
 
 export interface Actions {
-  [EActionArrow.ADD_DATA]({ commit }: AugmentedActionContext): void
+  [EActionArrow.ADD_DATA]({ commit }: AugmentedActionContext): void,
+  [EActionArrow.DELETE_ARROW]({ commit }: AugmentedActionContext, payload: IArrowData): void
 }
 
 export type Getters<S = IStateArrow> = {

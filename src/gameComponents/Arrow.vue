@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" ref="test" :class="direction">
+  <div>
   </div>
 </template>
 
@@ -7,36 +7,23 @@
 
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Emit } from 'vue-property-decorator'
 // import { EActionArrow } from '@/store/modules/arrow/typesArrow'
 import { EActionScore } from '@/store/modules/score/typesScore'
 import { StoreModuleEnum } from '@/store/types'
 import { state } from '@/store/modules/arrow/arrow'
+import { EActionArrow } from '@/store/modules/arrow/typesArrow'
 
 @Component
 export default class Arrow extends Vue {
-  idFromStore: any
-  directionFromStore: any
-
-  beforeMount () {
-    const arrowData: any = state.arrowsData.slice(-1) // for last added item in array
-    this.idFromStore = arrowData.id
-    this.directionFromStore = arrowData.direction
-  }
-
-  get id () {
-    return this.idFromStore
-  }
-
-  get direction () {
-    return this.directionFromStore
-  }
-
+  tempState: any
+  arrowData: any
   mounted () {
+    this.tempState = state.arrowsData
+    this.arrowData = this.tempState[this.tempState.length - 1] // for last added item in array
     this.$el.addEventListener('animationend', () => {
-      this.deleteEmit()
+      this.deleteArrowFromStore(this.arrowData)
       this.$destroy()
-      this.removeElement()
+      // this.removeElement()
     })
     /*    this.getId()
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`, {
@@ -45,13 +32,16 @@ export default class Arrow extends Vue {
     }) */
   }
 
-  @Emit('removed')
-  deleteEmit () {
-    return this.id
+  deleteArrowFromStore (payload: any) {
+    this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.DELETE_ARROW}`, payload)
   }
 
   setScore (point: number): void {
     this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, point)
+  }
+
+  beforeUnmount () {
+    this.deleteArrowFromStore(this.arrowData)
   }
 
   removeElement (): void {
