@@ -12,6 +12,11 @@ export enum EActionArrow {
   ADD_DATA = 'ADD_DATA'
 }
 
+export enum EGetterArrow {
+  // eslint-disable-next-line no-unused-vars
+  GET_ARROWS = 'GET_ARROWS'
+}
+
 export interface IArrowData {
   id: number | null
   direction: EDirection | null
@@ -34,4 +39,8 @@ export type AugmentedActionContext = {
 
 export interface Actions {
   [EActionArrow.ADD_DATA]({ commit }: AugmentedActionContext): void
+}
+
+export type Getters<S = IStateArrow> = {
+  [EGetterArrow.GET_ARROWS](state: S): IArrowData[]
 }

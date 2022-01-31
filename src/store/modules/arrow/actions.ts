@@ -7,7 +7,7 @@ import {
   IStateArrow
 } from '@/store/modules/arrow/typesArrow'
 import { RootStateInterface } from '@/store/types'
-import { className } from '@/store/helpers'
+import { getDirection } from '@/store/helpers'
 import { state } from '@/store/modules/arrow/arrow'
 
 export const actions: ActionTree<IStateArrow, RootStateInterface> & Actions = {
@@ -17,7 +17,7 @@ export const actions: ActionTree<IStateArrow, RootStateInterface> & Actions = {
     console.log('___ old: ', state.arrowsData)
     const payload: IArrowData = {
       id: Date.now(),
-      direction: className
+      direction: getDirection()
     }
     commit(EMutationArrow.SET_DATA, payload)
   }

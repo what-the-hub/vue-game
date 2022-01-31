@@ -5,17 +5,15 @@
     </div>
     <button class="button-start" @click="startGame">start</button>
     <button class="button-start" style="margin-top: 80px" @click="stopGame">stop</button>
+    <div>{{this.$store.state.arrowStore.arrowsData}}</div>
     <div id="good" ref="good">
       <div id="excellent" ref="excellent">
       </div>
     </div>
     <arrow
-      :bProps="positions"
-      v-for="n in elements"
+      v-for="n in storeItems"
       :key="n.id"
-      @get-data="getChildData"
-      @get-id="setId"
-      @removed="removeElement"
+      :class="n.direction"
     >
     </arrow>
   </div>
@@ -26,10 +24,10 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import Arrow from '@/gameComponents/Arrow.vue'
-import { EDirection, IArrowData, IFlowProps } from '@/types'
+import { IFlowProps } from '@/types'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionScore } from '@/store/modules/score/typesScore'
-import { EActionArrow } from '@/store/modules/arrow/typesArrow'
+import { EActionArrow, EGetterArrow } from '@/store/modules/arrow/typesArrow'
 
 @Component({
   components: {
@@ -37,28 +35,15 @@ import { EActionArrow } from '@/store/modules/arrow/typesArrow'
   }
 })
 export default class Board extends Vue {
-  id: number = 0
-  counts: number = 0
   isPlay: boolean = false
-  ind: number = 0
-  elements: IArrowData[] = []
+  safeLoop = 0
 
-  getChildData (value: any): void {
-    if (this.isPlay) {
-      this.runRender(value)
-    }
-  }
-
-  setId (value: any) {
-    this.id = value
-  }
-
-  removeElement (value: any) {
+  /*  removeElement (value: any) {
     this.elements = this.elements.filter((e) => {
       return e.id !== value
     })
     console.log(this.elements, 'deleted')
-  }
+  } */
 
   delay (ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms))
@@ -66,27 +51,41 @@ export default class Board extends Vue {
 
   startGame (): void {
     console.log('the game is on')
-    this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
-    this.elements.push({ id: 11, direction: EDirection.ArrowRight })
-    window.addEventListener('keydown', this.logKey)
     this.isPlay = true
-    this.counts += 1
+    this.runRender()
+    // window.addEventListener('keydown', this.logKey)
   }
 
-  runRender (value: any) {
-    this.ind += 1
+  runRender () {
     const interval = setInterval(() => {
-      this.elements.push({ id: value.id, direction: value.direction })
+      this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
+      this.safeLoop += 1
       clearInterval(interval)
-      console.log(this.elements)
+      if (this.safeLoop < 1000 && this.isPlay) {
+        this.runRender()
+      } else {
+        console.log('stop')
+      }
     }, this.getRandom(200, 2000))
+  }
+
+  mounted () {
+    this.$store.watch(() =>
+      this.$store.getters[`${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_ARROWS}`], value => {
+      console.log(value)
+    }
+    )
+  }
+
+  get storeItems () {
+    return this.$store.state.arrowStore.arrowsData
   }
 
   stopGame (): void {
     this.isPlay = false
   }
 
-  logKey (e: KeyboardEvent): void {
+  /*  logKey (e: KeyboardEvent): void {
     const key: string = e.key
     const keyMap: { [index: string]: string } = {
       ArrowLeft: 'left-arrow',
@@ -101,7 +100,7 @@ export default class Board extends Vue {
       console.log('works')
       this.checkTouch(singleEl.id)
     }
-  }
+  } */
 
   checkTouch (id: any): void {
     console.log(id, 'found')
@@ -135,14 +134,6 @@ export default class Board extends Vue {
 
   getRandom (min: number, max: number): number {
     return Math.floor((Math.random() * (max - min)) + min)
-  }
-
-  async renderBlocks (elements: number) {
-    for (let i = 1; i < elements; i += 1) {
-      await this.delay(this.getRandom(200, 2000))
-      this.counts += 1 // push with appendChild to parent ref render node el with el
-      // console.log(this.counts)
-    }
   }
 
   get positions (): IFlowProps {

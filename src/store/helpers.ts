@@ -7,6 +7,8 @@ const arrowDirections: EDirection[] = [
   EDirection.ArrowRight
 ]
 
-export const className: EDirection = arrowDirections[
-  Math.floor(Math.random() * arrowDirections.length)
-]
+export function getDirection (): EDirection {
+  return arrowDirections[
+    Math.floor(Math.random() * arrowDirections.length)
+  ]
+}
