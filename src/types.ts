@@ -26,10 +26,10 @@ export interface IArrowData {
 }
 
 export interface IFlowProps {
-  goodArTop: number,
-  goodArBottom: number,
-  exAreaTop: number,
-  exAreaBottom: number
+  topGoodArea: number,
+  bottomGoodArea: number,
+  topExcellentArea: number,
+  bottomExcellentArea: number
 }
 
 export class Block {

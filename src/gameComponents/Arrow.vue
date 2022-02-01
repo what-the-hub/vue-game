@@ -1,7 +1,7 @@
 <template>
   <div
-    :id="itemInfo.id"
-    :class="itemInfo.direction"
+    :id="arrowData.id"
+    :class="arrowData.direction"
     class="default-arrow">
   </div>
 </template>
@@ -18,9 +18,7 @@ export default class Arrow extends Vue {
   arrowData!: IArrowData
 
   created () {
-    this.arrowData = this.$store.getters[
-      `${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`
-    ] // for last added item in array
+    this.arrowData = this.getLastArrow()
   }
 
   mounted () {
@@ -30,15 +28,16 @@ export default class Arrow extends Vue {
     })
   }
 
-  deleteLastArrow (): void {
-    this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.DELETE_ARROW}`)
+  getLastArrow (): IArrowData {
+    return this.$store.getters[
+      `${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`
+    ] // for last added item in array
   }
 
-  get itemInfo (): IArrowData {
-    return {
-      id: this.arrowData.id,
-      direction: this.arrowData.direction
-    }
+  deleteLastArrow (): void {
+    this.$store.dispatch(
+      `${StoreModuleEnum.arrowStore}/${EActionArrow.DELETE_ARROW}`
+    )
   }
 }
 </script>

@@ -3,17 +3,16 @@
     <div id="score">
       {{ this.$store.state.scoreStore.score }}
     </div>
-    <button class="button-start" @click="startGame">start</button>
-    <button class="button-start" style="margin-top: 80px" @click="stopGame">stop</button>
+    <button class="button-base" @click="startGame">start</button>
+    <button class="button-base mt-5" @click="stopGame">stop</button>
     <div id="good" ref="good">
       <div id="excellent" ref="excellent">
       </div>
     </div>
     <arrow
-      v-for="n in storeItems"
+      v-for="n in storeArrows"
       :key="n.id"
-    >
-    </arrow>
+    />
   </div>
 </template>
 
@@ -33,52 +32,53 @@ import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
   }
 })
 export default class Board extends Vue {
-  isPlay: boolean = false
+  isActive: boolean = false // flag for start and finish game
   safeLoop: number = 0
 
-  get storeItems (): IArrowData[] {
+  get storeArrows (): IArrowData[] {
     return this.$store.state.arrowStore.arrowsData
   }
 
   get positions (): IFlowProps {
-    const goodArea: any = this.$refs.good
-    const exArea: any = this.$refs.excellent
+    const goodArea: any = this.$refs.good!
+    const excellentArea: any = this.$refs.excellent
     return {
-      goodArTop: goodArea.getBoundingClientRect().top,
-      goodArBottom: goodArea.getBoundingClientRect().bottom,
-      exAreaTop: exArea.getBoundingClientRect().top,
-      exAreaBottom: exArea.getBoundingClientRect().bottom
+      topGoodArea: goodArea.getBoundingClientRect().top,
+      bottomGoodArea: goodArea.getBoundingClientRect().bottom,
+      topExcellentArea: excellentArea.getBoundingClientRect().top,
+      bottomExcellentArea: excellentArea.getBoundingClientRect().bottom
     }
   }
 
   startGame (): void {
     console.log('the game is on')
-    this.isPlay = true
+    this.isActive = true
     this.runRender()
-    window.addEventListener('keydown', this.logKey)
+    window.addEventListener('keydown', this.onKeyDown)
   }
 
   runRender (): void {
     const interval = setInterval(() => {
-      this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
+      this.addArrow()
       this.safeLoop += 1
       clearInterval(interval)
-      if (this.safeLoop < 1000 && this.isPlay) {
+      if (this.safeLoop < 1000 && this.isActive) {
         this.runRender()
       } else {
+        this.isActive = false
         console.log('stop')
         setTimeout(() =>
-          window.removeEventListener('keydown', this.logKey),
-        5000)
+          window.removeEventListener('keydown', this.onKeyDown),
+        5000) // as an animation duration, to keep listener exist till arrows exist
       }
     }, this.getRandom(200, 2000))
   }
 
   stopGame (): void {
-    this.isPlay = false
+    this.isActive = false
   }
 
-  logKey (e: KeyboardEvent): void {
+  onKeyDown (e: KeyboardEvent): void {
     const key: string = e.key
     const keyMap: { [index: string]: EDirection } = {
       ArrowLeft: EDirection.ArrowLeft,
@@ -86,30 +86,24 @@ export default class Board extends Vue {
       ArrowDown: EDirection.ArrowDown,
       ArrowRight: EDirection.ArrowRight
     }
-    const singleEl = this.$store.state.arrowStore.arrowsData.find((e: IArrowData) =>
+    const firstFondArrow = this.$store.state.arrowStore.arrowsData.find((e: IArrowData) =>
       e.direction === keyMap[key]
     )
-    if (singleEl) {
-      this.checkTouch(singleEl.id)
+    if (firstFondArrow) {
+      this.checkArrowPosition(firstFondArrow.id)
     }
   }
 
-  checkTouch (id: any): void {
-    const item: HTMLElement = document.getElementById(id)!
+  checkArrowPosition (id: number): void {
+    const arrowEl: HTMLElement = document.getElementById(id.toString())!
 
-    const itemHeight: number = 20
-    const itemPosition: number = item.getBoundingClientRect().top + itemHeight / 2
+    const itemHeight: number = arrowEl.clientHeight
+    const itemPosition: number = arrowEl.getBoundingClientRect().top + itemHeight / 2
 
-    const positions: { [index: string]: number } = {
-      exTop: this.positions.exAreaTop,
-      exBottom: this.positions.exAreaBottom,
-      goodTop: this.positions.goodArTop,
-      goodBottom: this.positions.goodArBottom
-    }
-    const excellentArea: boolean = itemPosition >= positions.exTop &&
-      itemPosition <= positions.exBottom
-    const goodArea: boolean = itemPosition >= positions.goodTop &&
-      itemPosition <= positions.goodBottom
+    const excellentArea: boolean = itemPosition >= this.positions.topExcellentArea &&
+      itemPosition <= this.positions.bottomExcellentArea
+    const goodArea: boolean = itemPosition >= this.positions.topGoodArea &&
+      itemPosition <= this.positions.bottomGoodArea
 
     if (excellentArea) {
       this.setScore(2)
@@ -119,7 +113,13 @@ export default class Board extends Vue {
   }
 
   setScore (point: number): void {
-    this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, point)
+    this.$store.dispatch(
+      `${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, point
+    )
+  }
+
+  addArrow (): void {
+    this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
   }
 
   getRandom (min: number, max: number): number {
@@ -142,7 +142,7 @@ export default class Board extends Vue {
   position: relative
   overflow: hidden
 
-.button-start
+.button-base
   position: absolute
   top: 0
   right: 0
