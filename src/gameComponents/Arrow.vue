@@ -18,7 +18,9 @@ export default class Arrow extends Vue {
   arrowData!: IArrowData
 
   created () {
-    this.arrowData = this.$store.getters[`${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`] // for last added item in array
+    this.arrowData = this.$store.getters[
+      `${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`
+    ] // for last added item in array
   }
 
   mounted () {
@@ -28,7 +30,7 @@ export default class Arrow extends Vue {
     })
   }
 
-  deleteLastArrow () {
+  deleteLastArrow (): void {
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.DELETE_ARROW}`)
   }
 

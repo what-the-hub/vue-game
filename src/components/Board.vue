@@ -5,7 +5,6 @@
     </div>
     <button class="button-start" @click="startGame">start</button>
     <button class="button-start" style="margin-top: 80px" @click="stopGame">stop</button>
-    <div>{{this.$store.state.arrowStore.arrowsData}}</div>
     <div id="good" ref="good">
       <div id="excellent" ref="excellent">
       </div>
@@ -35,10 +34,21 @@ import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
 })
 export default class Board extends Vue {
   isPlay: boolean = false
-  safeLoop = 0
+  safeLoop: number = 0
 
-  delay (ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+  get storeItems (): IArrowData[] {
+    return this.$store.state.arrowStore.arrowsData
+  }
+
+  get positions (): IFlowProps {
+    const goodArea: any = this.$refs.good
+    const exArea: any = this.$refs.excellent
+    return {
+      goodArTop: goodArea.getBoundingClientRect().top,
+      goodArBottom: goodArea.getBoundingClientRect().bottom,
+      exAreaTop: exArea.getBoundingClientRect().top,
+      exAreaBottom: exArea.getBoundingClientRect().bottom
+    }
   }
 
   startGame (): void {
@@ -48,7 +58,7 @@ export default class Board extends Vue {
     window.addEventListener('keydown', this.logKey)
   }
 
-  runRender () {
+  runRender (): void {
     const interval = setInterval(() => {
       this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
       this.safeLoop += 1
@@ -57,15 +67,11 @@ export default class Board extends Vue {
         this.runRender()
       } else {
         console.log('stop')
+        setTimeout(() =>
+          window.removeEventListener('keydown', this.logKey),
+        5000)
       }
     }, this.getRandom(200, 2000))
-  }
-
-  mounted () {
-  }
-
-  get storeItems () {
-    return this.$store.state.arrowStore.arrowsData
   }
 
   stopGame (): void {
@@ -118,17 +124,6 @@ export default class Board extends Vue {
 
   getRandom (min: number, max: number): number {
     return Math.floor((Math.random() * (max - min)) + min)
-  }
-
-  get positions (): IFlowProps {
-    const goodArea: any = this.$refs.good
-    const exArea: any = this.$refs.excellent
-    return {
-      goodArTop: goodArea.getBoundingClientRect().top,
-      goodArBottom: goodArea.getBoundingClientRect().bottom,
-      exAreaTop: exArea.getBoundingClientRect().top,
-      exAreaBottom: exArea.getBoundingClientRect().bottom
-    }
   }
 }
 </script>
