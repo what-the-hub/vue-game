@@ -23,10 +23,10 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import Arrow from '@/gameComponents/Arrow.vue'
-import { IFlowProps } from '@/types'
+import { EDirection, IFlowProps } from '@/types'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionScore } from '@/store/modules/score/typesScore'
-import { EActionArrow, EGetterArrow } from '@/store/modules/arrow/typesArrow'
+import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
 
 @Component({
   components: {
@@ -37,13 +37,6 @@ export default class Board extends Vue {
   isPlay: boolean = false
   safeLoop = 0
 
-  /*  removeElement (value: any) {
-    this.elements = this.elements.filter((e) => {
-      return e.id !== value
-    })
-    console.log(this.elements, 'deleted')
-  } */
-
   delay (ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
@@ -52,7 +45,7 @@ export default class Board extends Vue {
     console.log('the game is on')
     this.isPlay = true
     this.runRender()
-    // window.addEventListener('keydown', this.logKey)
+    window.addEventListener('keydown', this.logKey)
   }
 
   runRender () {
@@ -69,11 +62,6 @@ export default class Board extends Vue {
   }
 
   mounted () {
-    this.$store.watch(() =>
-      this.$store.getters[`${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_ARROWS}`], value => {
-      console.log(value)
-    }
-    )
   }
 
   get storeItems () {
@@ -84,47 +72,44 @@ export default class Board extends Vue {
     this.isPlay = false
   }
 
-  /*  logKey (e: KeyboardEvent): void {
+  logKey (e: KeyboardEvent): void {
     const key: string = e.key
-    const keyMap: { [index: string]: string } = {
-      ArrowLeft: 'left-arrow',
-      ArrowUp: 'up-arrow',
-      ArrowDown: 'down-arrow',
-      ArrowRight: 'right-arrow'
+    const keyMap: { [index: string]: EDirection } = {
+      ArrowLeft: EDirection.ArrowLeft,
+      ArrowUp: EDirection.ArrowUp,
+      ArrowDown: EDirection.ArrowDown,
+      ArrowRight: EDirection.ArrowRight
     }
-    const singleEl = this.elements.find((e) =>
+    const singleEl = this.$store.state.arrowStore.arrowsData.find((e: IArrowData) =>
       e.direction === keyMap[key]
     )
     if (singleEl) {
-      console.log('works')
       this.checkTouch(singleEl.id)
     }
-  } */
+  }
 
   checkTouch (id: any): void {
-    console.log(id, 'found')
-    console.log(document.getElementById(id))
-    console.log(document.getElementById(id)?.getBoundingClientRect().top)
+    const item: HTMLElement = document.getElementById(id)!
 
-    // const itemHeight: number = this.$el.clientHeight
-    // const itemPosition: number = this.$el.getBoundingClientRect().top + itemHeight / 2
+    const itemHeight: number = 20
+    const itemPosition: number = item.getBoundingClientRect().top + itemHeight / 2
 
-    /*    const positions: { [index: string]: number } = {
-      exTop: this.bProps.exAreaTop,
-      exBottom: this.bProps.exAreaBottom,
-      goodTop: this.bProps.goodArTop,
-      goodBottom: this.bProps.goodArBottom
+    const positions: { [index: string]: number } = {
+      exTop: this.positions.exAreaTop,
+      exBottom: this.positions.exAreaBottom,
+      goodTop: this.positions.goodArTop,
+      goodBottom: this.positions.goodArBottom
     }
-    const excellentArea: boolean = itemPosition >= positions.exTop && itemPosition <= positions.exBottom
-    const goodArea: boolean = itemPosition >= positions.goodTop && itemPosition <= positions.goodBottom
+    const excellentArea: boolean = itemPosition >= positions.exTop &&
+      itemPosition <= positions.exBottom
+    const goodArea: boolean = itemPosition >= positions.goodTop &&
+      itemPosition <= positions.goodBottom
 
     if (excellentArea) {
-      console.log('great')
       this.setScore(2)
     } else if (goodArea) {
-      console.log('good')
       this.setScore(1)
-    } */
+    }
   }
 
   setScore (point: number): void {
