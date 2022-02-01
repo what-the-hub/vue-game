@@ -3,7 +3,7 @@ import { RootStateInterface } from '@/store/types'
 import { EGetterArrow, IStateArrow, Getters } from '@/store/modules/arrow/typesArrow'
 
 export const getters: GetterTree<IStateArrow, RootStateInterface> & Getters = {
-  [EGetterArrow.GET_ARROWS] (state) {
-    return state.arrowsData
+  [EGetterArrow.GET_LAST_ITEM] (state) {
+    return state.arrowsData[state.arrowsData.length - 1]
   }
 }

@@ -7,11 +7,7 @@ export const mutations: MutationTree<IStateArrow> & Mutations = {
     state.arrowsData?.push(payload)
     console.log('___ NEW: ', state.arrowsData)
   },
-  [EMutationArrow.UPDATE_DATA]: (state, payload) => {
-    console.log('_p', payload)
+  [EMutationArrow.UPDATE_DATA]: (state) => {
     state.arrowsData.shift()
-    /*    state.arrowsData = state.arrowsData.filter(e => {
-      return e.id !== payload.id && e.direction !== payload.direction
-    }) */
   }
 }

@@ -18,7 +18,7 @@ export enum EActionArrow {
 
 export enum EGetterArrow {
   // eslint-disable-next-line no-unused-vars
-  GET_ARROWS = 'GET_ARROWS'
+  GET_LAST_ITEM = 'GET_LAST_ITEM'
 }
 
 export interface IArrowData {
@@ -38,15 +38,15 @@ export type Mutations<S = IStateArrow> = {
 export type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
     key: K,
-    payload: Parameters<Mutations[K]>[1]
+    payload?: Parameters<Mutations[K]>[1]
   ): ReturnType<Mutations[K]>
 } & Omit<ActionContext<IStateArrow, RootStateInterface>, 'commit'>
 
 export interface Actions {
   [EActionArrow.ADD_DATA]({ commit }: AugmentedActionContext): void,
-  [EActionArrow.DELETE_ARROW]({ commit }: AugmentedActionContext, payload: IArrowData): void
+  [EActionArrow.DELETE_ARROW]({ commit }: AugmentedActionContext): void
 }
 
 export type Getters<S = IStateArrow> = {
-  [EGetterArrow.GET_ARROWS](state: S): IArrowData[]
+  [EGetterArrow.GET_LAST_ITEM](state: S): IArrowData
 }

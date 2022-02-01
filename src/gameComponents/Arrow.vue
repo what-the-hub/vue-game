@@ -10,26 +10,21 @@ import Component from 'vue-class-component'
 // import { EActionArrow } from '@/store/modules/arrow/typesArrow'
 import { EActionScore } from '@/store/modules/score/typesScore'
 import { StoreModuleEnum } from '@/store/types'
-import { state } from '@/store/modules/arrow/arrow'
-import { EActionArrow } from '@/store/modules/arrow/typesArrow'
+import { EActionArrow, EGetterArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
 
 @Component
 export default class Arrow extends Vue {
-  tempState: any
-  arrowData: any
+  arrowData!: IArrowData
+
+  created () {
+    this.arrowData = this.$store.getters[`${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`] // for last added item in array
+  }
+
   mounted () {
-    this.tempState = state.arrowsData
-    this.arrowData = this.tempState[this.tempState.length - 1] // for last added item in array
     this.$el.addEventListener('animationend', () => {
       this.deleteArrowFromStore(this.arrowData)
       this.$destroy()
-      // this.removeElement()
     })
-    /*    this.getId()
-    this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`, {
-      id: this.id,
-      direction: this.className
-    }) */
   }
 
   deleteArrowFromStore (payload: any) {
@@ -38,14 +33,6 @@ export default class Arrow extends Vue {
 
   setScore (point: number): void {
     this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, point)
-  }
-
-  beforeUnmount () {
-    this.deleteArrowFromStore(this.arrowData)
-  }
-
-  removeElement (): void {
-    this.$el.parentNode?.removeChild(this.$el)
   }
 }
 </script>

@@ -21,8 +21,7 @@ export const actions: ActionTree<IStateArrow, RootStateInterface> & Actions = {
   },
   [EActionArrow.DELETE_ARROW]: ({
     commit
-  }, payload) => {
-    console.log(payload, 'payload')
-    commit(EMutationArrow.UPDATE_DATA, payload)
+  }) => {
+    commit(EMutationArrow.UPDATE_DATA)
   }
 }
