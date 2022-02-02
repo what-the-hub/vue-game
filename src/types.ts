@@ -1,11 +1,35 @@
-export interface UserInputData {
-  email: string;
-  password: string;
+export enum EDirection {
+  // eslint-disable-next-line no-unused-vars
+  ArrowLeft = 'left-arrow',
+  // eslint-disable-next-line no-unused-vars
+  ArrowUp = 'up-arrow',
+  // eslint-disable-next-line no-unused-vars
+  ArrowDown = 'down-arrow',
+  // eslint-disable-next-line no-unused-vars
+  ArrowRight = 'right-arrow'
 }
 
-export interface Errors {
-  emailEr: RegExpMatchArray | boolean;
-  passwordEr: RegExpMatchArray | boolean;
+export enum EKeys {
+  // eslint-disable-next-line no-unused-vars
+  Left = 'ArrowLeft',
+  // eslint-disable-next-line no-unused-vars
+  Up = 'ArrowUp',
+  // eslint-disable-next-line no-unused-vars
+  Down = 'ArrowDown',
+  // eslint-disable-next-line no-unused-vars
+  Right = 'ArrowRight'
+}
+
+export interface IArrowData {
+  id: number;
+  direction: EDirection
+}
+
+export interface IFlowProps {
+  topGoodArea: number,
+  bottomGoodArea: number,
+  topExcellentArea: number,
+  bottomExcellentArea: number
 }
 
 export class Block {

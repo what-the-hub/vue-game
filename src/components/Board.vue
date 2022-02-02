@@ -1,13 +1,18 @@
 <template>
-  <div id="game">
-    <div id="score">0</div>
-    <button class="button-start" @click="startGame">start</button>
-    <div id="touch-area">
-      <div id="good">
-        <div id="excellent">
-        </div>
+  <div id="game" ref="game">
+    <div id="score">
+      {{ this.$store.state.scoreStore.score }}
+    </div>
+    <button class="button-base" @click="startGame">start</button>
+    <button class="button-base mt-5" @click="stopGame">stop</button>
+    <div id="good" ref="good">
+      <div id="excellent" ref="excellent">
       </div>
     </div>
+    <arrow
+      v-for="n in storeArrows"
+      :key="n.id"
+    />
   </div>
 </template>
 
@@ -15,75 +20,110 @@
 
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { Block } from '@/types'
+import Arrow from '@/gameComponents/Arrow.vue'
+import { EDirection, IFlowProps } from '@/types'
+import { StoreModuleEnum } from '@/store/types'
+import { EActionScore } from '@/store/modules/score/typesScore'
+import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
+import { getRandom } from '@/helpers/getRandomHelper'
 
-@Component
+@Component({
+  components: {
+    Arrow
+  }
+})
 export default class Board extends Vue {
-  gameFlow = document.getElementById('game')
-  scoreElement = document.getElementById('score')
-  scoreCounter: number = 0
-  gameFlowHeight = 600
-  block = new Block()
-  counts: number = 0
+  isActive: boolean = false // flag for start and finish game
+  safeLoop: number = 0
 
-  checkTouch (item: any) {
-    const itemPosition = parseInt(window.getComputedStyle(item).getPropertyValue('top'))
-    const grMinHeight = 90
-    const grMaxHeight = 60
-    const goodMinHeight = 110
-    const goodMaxHeight = 30
-    const greatArea = itemPosition >= this.gameFlowHeight - grMinHeight && itemPosition <= this.gameFlowHeight - grMaxHeight
-    const goodArea = itemPosition >= this.gameFlowHeight - goodMinHeight && itemPosition <= this.gameFlowHeight - goodMaxHeight
-
-    if (greatArea) {
-      this.scoreCounter += 2
-    } else if (goodArea) {
-      this.scoreCounter += 1
-    }
-  this.scoreElement!.textContent = this.scoreCounter.toString()
+  get storeArrows (): IArrowData[] {
+    return this.$store.state.arrowStore.arrowsData
   }
 
-  delay = (ms: number) => {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
-
-  renderBlocks = async (elements: any) => { // function will be deleted
-    for (let i = 0; i < elements.length; i += 1) {
-      if (i === 0) {
-        this.gameFlow?.appendChild(elements[i]) // components will be added using VUE methods
-      } else {
-        await this.delay(this.block.getRandom().timeout)
-        this.gameFlow?.appendChild(elements[i])
-      }
-
-      elements[i].addEventListener('animationend', () => {
-        document.getElementById(elements[i].id)?.remove() // components will be deleted using VUE methods
-      })
+  get positions (): IFlowProps {
+    const goodArea = this.$refs.good as Element
+    const excellentArea = this.$refs.excellent as Element
+    return {
+      topGoodArea: goodArea.getBoundingClientRect().top,
+      bottomGoodArea: goodArea.getBoundingClientRect().bottom,
+      topExcellentArea: excellentArea.getBoundingClientRect().top,
+      bottomExcellentArea: excellentArea.getBoundingClientRect().bottom
     }
   }
 
-  startGame () {
-    this.counts += 1
+  startGame (): void {
     console.log('the game is on')
-    const elements = []
-    for (let i = 1; i <= this.block.getRandom().elements; i += 1) {
-      elements.push(new Block().createItem())
-    }
-    this.renderBlocks(elements)
-    document.addEventListener('keydown', this.logKey)
+    this.isActive = true
+    this.runRender()
+    window.addEventListener('keydown', this.onKeyDown)
   }
 
-  logKey (e: KeyboardEvent) {
-    const key: any = e.key
-    const keyToColumn: any = {
-      ArrowLeft: document.getElementsByClassName('left-arrow'),
-      ArrowUp: document.getElementsByClassName('up-arrow'),
-      ArrowDown: document.getElementsByClassName('down-arrow'),
-      ArrowRight: document.getElementsByClassName('right-arrow')
+  runRender (): void {
+    const interval = setInterval(() => {
+      this.addArrow()
+      this.safeLoop += 1
+      clearInterval(interval)
+      if (this.safeLoop < 1000 && this.isActive) {
+        this.runRender()
+      } else {
+        this.isActive = false
+        console.log('stop')
+        setTimeout(() =>
+          window.removeEventListener('keydown', this.onKeyDown),
+        5000) // as an animation duration, to keep listener exist till arrows exist
+      }
+    }, getRandom(200, 2000))
+  }
+
+  stopGame (): void {
+    this.isActive = false
+  }
+
+  onKeyDown (e: KeyboardEvent): void {
+    const key: string = e.key
+    const keyMap: { [index: string]: EDirection } = {
+      ArrowLeft: EDirection.ArrowLeft,
+      ArrowUp: EDirection.ArrowUp,
+      ArrowDown: EDirection.ArrowDown,
+      ArrowRight: EDirection.ArrowRight
     }
-    if (keyToColumn[key] && keyToColumn[key].length > 0) {
-      this.checkTouch(keyToColumn[key][0])
-    } else return null
+    const firstFondArrow = this.$store.state.arrowStore.arrowsData.find((e: IArrowData) =>
+      e.direction === keyMap[key]
+    )
+    if (firstFondArrow) {
+      this.checkArrowPosition(firstFondArrow.id)
+    }
+  }
+
+  checkArrowPosition (id: number): void {
+    const arrowEl: HTMLElement | null = document.getElementById(id.toString())
+    if (arrowEl) {
+      const itemHeight: number = arrowEl.clientHeight
+      const itemPosition: number = arrowEl.getBoundingClientRect().top + itemHeight / 2
+
+      const excellentArea: boolean = itemPosition >= this.positions.topExcellentArea &&
+        itemPosition <= this.positions.bottomExcellentArea
+      const goodArea: boolean = itemPosition >= this.positions.topGoodArea &&
+        itemPosition <= this.positions.bottomGoodArea
+
+      if (excellentArea) {
+        this.setScore(2)
+      } else if (goodArea) {
+        this.setScore(1)
+      }
+    } else {
+      console.log('Something wrong, please reload page')
+    }
+  }
+
+  setScore (point: number): void {
+    this.$store.dispatch(
+      `${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, point
+    )
+  }
+
+  addArrow (): void {
+    this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
   }
 }
 </script>
@@ -95,114 +135,31 @@ export default class Board extends Vue {
 
 #game
   width: 500px
-  height: 600px
+  height: 500px
+  box-sizing: content-box
   border: 1px solid black
   margin: auto
   position: relative
   overflow: hidden
 
-.button-start
+.button-base
   position: absolute
   top: 0
   right: 0
 
-#touch-area
-  width: 500px
-  height: 100px
-  background-color: rgba(232, 255, 204, 0.5)
-  position: absolute
-  bottom: 0
-
 #good
-  position: relative
   background: rgb(255, 241, 0)
-  height: 80px
-  top: 0
+  height: 100px
+  width: 100%
+  position: absolute
+  bottom: 40px
+  display: flex
+  align-items: center
+  justify-content: center
 
 #excellent
-  position: relative
+  position: absolute
+  width: 100%
   background: rgb(126, 255, 0)
   height: 40px
-  top: 20px
-
-.left-arrow
-  background-color: rgb(255, 0, 0)
-  width: 20px
-  height: 20px
-  position: absolute
-  z-index: 10
-  top: 0
-  left: 20px
-  animation: block 5s linear
-
-.left-arrow::before
-  content: ''
-  border-top: 10px solid transparent
-  border-bottom: 10px solid transparent
-  border-right: 10px solid blue
-  position: absolute
-  right: 5px
-
-.up-arrow
-  background-color: rgb(255, 0, 0)
-  width: 20px
-  height: 20px
-  position: absolute
-  z-index: 10
-  top: 0
-  left: 200px
-  animation: block 5s linear
-
-.up-arrow::before
-  content: ''
-  border-top: 10px solid transparent
-  border-bottom: 10px solid blue
-  border-right: 10px solid transparent
-  border-left: 10px solid transparent
-  position: absolute
-  bottom: 5px
-
-.down-arrow
-  background-color: rgb(255, 0, 0)
-  width: 20px
-  height: 20px
-  position: absolute
-  z-index: 10
-  top: 0
-  left: 300px
-  animation: block 5s linear
-
-.down-arrow::before
-  content: ''
-  border-top: 10px solid blue
-  border-bottom: 10px solid transparent
-  border-right: 10px solid transparent
-  border-left: 10px solid transparent
-  position: absolute
-  top: 5px
-
-.right-arrow
-  background-color: rgb(255, 0, 0)
-  width: 20px
-  height: 20px
-  position: absolute
-  z-index: 10
-  top: 0
-  left: 400px
-  animation: block 5s linear
-
-.right-arrow::before
-  content: ''
-  border-top: 10px solid transparent
-  border-bottom: 10px solid transparent
-  border-right: 10px solid transparent
-  border-left: 10px solid blue
-  position: absolute
-  left: 5px
-
-@keyframes block
-  0%
-    top: 0
-  100%
-    top: 580px
 </style>
