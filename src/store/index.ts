@@ -6,13 +6,6 @@ import { scoreStore } from '@/store/modules/score/score'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  mutations: {
-  },
-  actions: {
-  },
-  getters: {
-
-  },
   modules: {
     arrowStore,
     scoreStore

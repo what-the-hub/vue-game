@@ -25,6 +25,7 @@ import { EDirection, IFlowProps } from '@/types'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionScore } from '@/store/modules/score/typesScore'
 import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
+import { getRandom } from '@/helpers/getRandomHelper'
 
 @Component({
   components: {
@@ -40,8 +41,8 @@ export default class Board extends Vue {
   }
 
   get positions (): IFlowProps {
-    const goodArea: any = this.$refs.good!
-    const excellentArea: any = this.$refs.excellent
+    const goodArea = this.$refs.good as Element
+    const excellentArea = this.$refs.excellent as Element
     return {
       topGoodArea: goodArea.getBoundingClientRect().top,
       bottomGoodArea: goodArea.getBoundingClientRect().bottom,
@@ -71,7 +72,7 @@ export default class Board extends Vue {
           window.removeEventListener('keydown', this.onKeyDown),
         5000) // as an animation duration, to keep listener exist till arrows exist
       }
-    }, this.getRandom(200, 2000))
+    }, getRandom(200, 2000))
   }
 
   stopGame (): void {
@@ -95,20 +96,23 @@ export default class Board extends Vue {
   }
 
   checkArrowPosition (id: number): void {
-    const arrowEl: HTMLElement = document.getElementById(id.toString())!
+    const arrowEl: HTMLElement | null = document.getElementById(id.toString())
+    if (arrowEl) {
+      const itemHeight: number = arrowEl.clientHeight
+      const itemPosition: number = arrowEl.getBoundingClientRect().top + itemHeight / 2
 
-    const itemHeight: number = arrowEl.clientHeight
-    const itemPosition: number = arrowEl.getBoundingClientRect().top + itemHeight / 2
+      const excellentArea: boolean = itemPosition >= this.positions.topExcellentArea &&
+        itemPosition <= this.positions.bottomExcellentArea
+      const goodArea: boolean = itemPosition >= this.positions.topGoodArea &&
+        itemPosition <= this.positions.bottomGoodArea
 
-    const excellentArea: boolean = itemPosition >= this.positions.topExcellentArea &&
-      itemPosition <= this.positions.bottomExcellentArea
-    const goodArea: boolean = itemPosition >= this.positions.topGoodArea &&
-      itemPosition <= this.positions.bottomGoodArea
-
-    if (excellentArea) {
-      this.setScore(2)
-    } else if (goodArea) {
-      this.setScore(1)
+      if (excellentArea) {
+        this.setScore(2)
+      } else if (goodArea) {
+        this.setScore(1)
+      }
+    } else {
+      console.log('Something wrong, please reload page')
     }
   }
 
@@ -120,10 +124,6 @@ export default class Board extends Vue {
 
   addArrow (): void {
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
-  }
-
-  getRandom (min: number, max: number): number {
-    return Math.floor((Math.random() * (max - min)) + min)
   }
 }
 </script>

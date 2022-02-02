@@ -6,7 +6,7 @@ export enum EMutationArrow {
   // eslint-disable-next-line no-unused-vars
   SET_DATA = 'SET_DATA',
   // eslint-disable-next-line no-unused-vars
-  UPDATE_DATA = 'UPDATE_DATA'
+  REMOVE_ARROW = 'REMOVE_ARROW'
 }
 
 export enum EActionArrow {
@@ -32,7 +32,7 @@ export interface IStateArrow {
 
 export type Mutations<S = IStateArrow> = {
   [EMutationArrow.SET_DATA](state: S, payload: IArrowData): void
-  [EMutationArrow.UPDATE_DATA](state: S, payload: IArrowData): void
+  [EMutationArrow.REMOVE_ARROW](state: S, payload: IArrowData): void
 }
 
 export type AugmentedActionContext = {

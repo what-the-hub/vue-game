@@ -7,7 +7,7 @@ import {
   IStateArrow
 } from '@/store/modules/arrow/typesArrow'
 import { RootStateInterface } from '@/store/types'
-import { getDirection } from '@/store/helpers'
+import { getDirection } from '@/helpers/getDirectionHelper'
 
 export const actions: ActionTree<IStateArrow, RootStateInterface> & Actions = {
   [EActionArrow.ADD_DATA]: ({
@@ -22,6 +22,6 @@ export const actions: ActionTree<IStateArrow, RootStateInterface> & Actions = {
   [EActionArrow.DELETE_ARROW]: ({
     commit
   }) => {
-    commit(EMutationArrow.UPDATE_DATA)
+    commit(EMutationArrow.REMOVE_ARROW)
   }
 }

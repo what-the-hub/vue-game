@@ -3,9 +3,9 @@ import { EMutationArrow, IStateArrow, Mutations } from '@/store/modules/arrow/ty
 
 export const mutations: MutationTree<IStateArrow> & Mutations = {
   [EMutationArrow.SET_DATA]: (state, payload) => {
-    state.arrowsData?.push(payload)
+    state.arrowsData.push(payload)
   },
-  [EMutationArrow.UPDATE_DATA]: (state) => {
+  [EMutationArrow.REMOVE_ARROW]: (state) => {
     state.arrowsData.shift()
   }
 }
