@@ -10,10 +10,12 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { IAreasPositions } from '@/types'
+import { Emit } from 'vue-property-decorator'
 
 @Component
 export default class Areas extends Vue {
-  calculatePositions = (): IAreasPositions => {
+  @Emit('calculate-positions')
+  getPositions (): IAreasPositions {
     const goodArea = this.$refs.good as Element
     const excellentArea = this.$refs.excellent as Element
     return {
@@ -22,6 +24,10 @@ export default class Areas extends Vue {
       topExcellentArea: excellentArea.getBoundingClientRect().top,
       bottomExcellentArea: excellentArea.getBoundingClientRect().bottom
     }
+  }
+
+  mounted (): void {
+    this.getPositions()
   }
 }
 </script>

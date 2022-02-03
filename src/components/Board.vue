@@ -5,7 +5,7 @@
     </div>
     <button class="button-base" @click="startGame">start</button>
     <button class="button-base mt-5" @click="stopGame">stop</button>
-    <areas ref="areas">
+    <areas ref="areas" @calculate-positions="setPositions">
     </areas>
     <arrow
       ref="test"
@@ -20,7 +20,7 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import Arrow from '@/gameComponents/Arrow.vue'
-import { EDirection, IAreasPositions, VAreas } from '@/types'
+import { EDirection, IAreasPositions } from '@/types'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionScore } from '@/store/modules/score/typesScore'
 import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
@@ -35,15 +35,18 @@ import Areas from '@/gameComponents/Areas.vue'
 export default class Board extends Vue {
   isActive: boolean = false // flag for start and finish game
   safeLoop: number = 0
-  positions!: IAreasPositions
+  areasPositions!: IAreasPositions
 
-  mounted (): void {
-    const areas = this.$refs.areas as VAreas
-    this.positions = areas.calculatePositions()
+  get positions (): IAreasPositions {
+    return this.areasPositions
   }
 
   get storeArrows (): IArrowData[] {
     return this.$store.state.arrowStore.arrowsData
+  }
+
+  setPositions (value: IAreasPositions): void {
+    this.areasPositions = value
   }
 
   startGame (): void {
