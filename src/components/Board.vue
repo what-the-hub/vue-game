@@ -5,11 +5,10 @@
     </div>
     <button class="button-base" @click="startGame">start</button>
     <button class="button-base mt-5" @click="stopGame">stop</button>
-    <div id="good" ref="good">
-      <div id="excellent" ref="excellent">
-      </div>
-    </div>
+    <areas ref="areas">
+    </areas>
     <arrow
+      ref="test"
       v-for="n in storeArrows"
       :key="n.id"
     />
@@ -21,34 +20,30 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import Arrow from '@/gameComponents/Arrow.vue'
-import { EDirection, IFlowProps } from '@/types'
+import { EDirection, IAreasPositions, VAreas } from '@/types'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionScore } from '@/store/modules/score/typesScore'
 import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
 import { getRandom } from '@/helpers/getRandomHelper'
+import Areas from '@/gameComponents/Areas.vue'
 
 @Component({
   components: {
-    Arrow
+    Arrow, Areas
   }
 })
 export default class Board extends Vue {
   isActive: boolean = false // flag for start and finish game
   safeLoop: number = 0
+  positions!: IAreasPositions
+
+  mounted (): void {
+    const areas = this.$refs.areas as VAreas
+    this.positions = areas.calculatePositions()
+  }
 
   get storeArrows (): IArrowData[] {
     return this.$store.state.arrowStore.arrowsData
-  }
-
-  get positions (): IFlowProps {
-    const goodArea = this.$refs.good as Element
-    const excellentArea = this.$refs.excellent as Element
-    return {
-      topGoodArea: goodArea.getBoundingClientRect().top,
-      bottomGoodArea: goodArea.getBoundingClientRect().bottom,
-      topExcellentArea: excellentArea.getBoundingClientRect().top,
-      bottomExcellentArea: excellentArea.getBoundingClientRect().bottom
-    }
   }
 
   startGame (): void {
@@ -146,20 +141,4 @@ export default class Board extends Vue {
   position: absolute
   top: 0
   right: 0
-
-#good
-  background: rgb(255, 241, 0)
-  height: 100px
-  width: 100%
-  position: absolute
-  bottom: 40px
-  display: flex
-  align-items: center
-  justify-content: center
-
-#excellent
-  position: absolute
-  width: 100%
-  background: rgb(126, 255, 0)
-  height: 40px
 </style>
