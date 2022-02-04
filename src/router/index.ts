@@ -5,6 +5,7 @@ import Registration from '@/components/Registration.vue'
 import About from '@/views/About.vue'
 import Board from '@/components/Board.vue'
 import Arrow from '@/gameComponents/Arrow.vue'
+import Auth from '@/components/Auth.vue'
 
 Vue.use(VueRouter)
 
@@ -18,6 +19,11 @@ const routes: Array<RouteConfig> = [
     path: '/sign-up',
     name: 'Registration',
     component: Registration
+  },
+  {
+    path: '/auth',
+    name: 'Authorisation',
+    component: Auth
   },
   {
     path: '/game',
