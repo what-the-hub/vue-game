@@ -8,5 +8,8 @@ import {
 export const mutations: MutationTree<IStateScore> & Mutations = {
   [EMutationScore.SET_POINTS]: (state, payload) => {
     state.score += payload
+  },
+  [EMutationScore.SET_LAST_STYLE]: (state, payload) => {
+    state.lastStyle = payload
   }
 }

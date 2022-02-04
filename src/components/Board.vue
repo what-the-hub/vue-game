@@ -5,8 +5,7 @@
     </div>
     <button class="button-base" @click="startGame">start</button>
     <button class="button-base mt-5" @click="stopGame">stop</button>
-    <areas ref="areas" @calculate-positions="setPositions">
-    </areas>
+    <areas @calculate-positions="setPositions" />
     <arrow
       ref="test"
       v-for="n in storeArrows"
@@ -106,8 +105,10 @@ export default class Board extends Vue {
 
       if (excellentArea) {
         this.setScore(2)
+        this.setStyle('excellent')
       } else if (goodArea) {
         this.setScore(1)
+        this.setStyle('good')
       }
     } else {
       console.log('Something wrong, please reload page')
@@ -117,6 +118,12 @@ export default class Board extends Vue {
   setScore (point: number): void {
     this.$store.dispatch(
       `${StoreModuleEnum.scoreStore}/${EActionScore.SET_POINTS}`, point
+    )
+  }
+
+  setStyle (style: string): void {
+    this.$store.dispatch(
+      `${StoreModuleEnum.scoreStore}/${EActionScore.SET_LAST_STYLE}`, style
     )
   }
 

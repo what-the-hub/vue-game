@@ -1,6 +1,6 @@
 <template>
-  <div id="good" ref="good">
-    <div id="excellent" ref="excellent">
+  <div id="good" ref="good" :class="lastStyle['good']">
+    <div id="excellent" ref="excellent" :class="lastStyle['excellent']">
     </div>
   </div>
 </template>
@@ -10,10 +10,29 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { IAreasPositions } from '@/types'
-import { Emit } from 'vue-property-decorator'
+import { Emit, Watch } from 'vue-property-decorator'
+import { IStateScore } from '@/store/modules/score/typesScore'
 
 @Component
 export default class Areas extends Vue {
+  animationStyle: {[index: string]: string} = {
+    good: '',
+    excellent: ''
+  }
+
+  mapStyles: {[index: string]: string} = {
+    good: 'good-animation',
+    excellent: 'excellent-animation'
+  }
+
+  get lastStyle () {
+    return this.animationStyle
+  }
+
+  mounted (): void {
+    this.getPositions()
+  }
+
   @Emit('calculate-positions')
   getPositions (): IAreasPositions {
     const goodArea = this.$refs.good as Element
@@ -26,8 +45,15 @@ export default class Areas extends Vue {
     }
   }
 
-  mounted (): void {
-    this.getPositions()
+  @Watch('$store.state.scoreStore', { immediate: true, deep: true })
+  onLastStyleChanged (val: IStateScore) {
+    const style: string = val.lastStyle
+    if (this.mapStyles[style]) {
+      this.animationStyle[style] = this.mapStyles[style]
+      setTimeout(() => {
+        this.animationStyle[style] = ''
+      }, 300)
+    }
   }
 }
 </script>
@@ -48,4 +74,15 @@ export default class Areas extends Vue {
   width: 100%
   background: rgb(126, 255, 0)
   height: 40px
+
+.good-animation
+  border-top: 2px solid rgb(245, 170, 73)
+  border-bottom: 2px solid rgb(245, 170, 73)
+  box-shadow: 0 0 43px 16px rgba(164, 138, 32, 0.33)
+
+.excellent-animation
+  border-top: 2px solid rgb(11, 168, 0)
+  border-bottom: 2px solid rgb(11, 168, 0)
+  box-shadow: 0 0 10px 16px rgba(73, 255, 1, 0.25)
+
 </style>

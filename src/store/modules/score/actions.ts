@@ -7,5 +7,10 @@ export const actions: ActionTree<IStateScore, RootStateInterface> & Actions = {
     commit
   }, payload) => {
     commit(EMutationScore.SET_POINTS, payload)
+  },
+  [EActionScore.SET_LAST_STYLE]: ({
+    commit
+  }, payload) => {
+    commit(EMutationScore.SET_LAST_STYLE, payload)
   }
 }
