@@ -6,7 +6,8 @@ import { Module } from 'vuex'
 import { RootStateInterface } from '@/store/types'
 
 export const state: IStateScore = {
-  score: 0
+  score: 0,
+  lastStyle: ''
 }
 
 export const scoreStore: Module<IStateScore, RootStateInterface> = {
