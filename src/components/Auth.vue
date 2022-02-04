@@ -48,13 +48,18 @@
         </div>
       </div>
 
-      <button type="submit"
-              class="btn btn-primary"
-              @click="redirectOnSubmit"
-              :disabled="$v.$error || !$v.$dirty"
-      >
-        Login
-      </button>
+      <div class="buttons-wrapper">
+        <router-link class="action-href" to="/sign-up">Register</router-link>
+        <button type="submit"
+                class="btn btn-primary"
+                @click="redirectOnLogin"
+                :disabled="$v.$error || !$v.$dirty"
+        >
+          Login
+        </button>
+
+      </div>
+
     </form>
   </div>
 </template>
@@ -87,7 +92,7 @@ export default class Auth extends Vue {
     return email.length > 0 && pass.length > 0
   }
 
-  redirectOnSubmit (): void {
+  redirectOnLogin (): void {
     this.$router.push({
       name: 'About',
       params: { email: this.email, password: this.password }
@@ -109,4 +114,12 @@ label
     margin-top: 10px
     font-size: x-small
     color: red
+
+.buttons-wrapper
+  display: flex
+  justify-content: space-between
+
+  .action-href
+    align-self: flex-end
+    text-decoration: none
 </style>
