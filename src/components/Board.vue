@@ -34,18 +34,14 @@ import Areas from '@/gameComponents/Areas.vue'
 export default class Board extends Vue {
   isActive: boolean = false // flag for start and finish game
   safeLoop: number = 0
-  areasPositions!: IAreasPositions
-
-  get positions (): IAreasPositions {
-    return this.areasPositions
-  }
+  positions!: IAreasPositions
 
   get storeArrows (): IArrowData[] {
     return this.$store.state.arrowStore.arrowsData
   }
 
   setPositions (value: IAreasPositions): void {
-    this.areasPositions = value
+    this.positions = value
   }
 
   startGame (): void {

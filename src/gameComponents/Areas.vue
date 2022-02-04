@@ -1,6 +1,6 @@
 <template>
-  <div id="good" ref="good" :class="lastStyle['good']">
-    <div id="excellent" ref="excellent" :class="lastStyle['excellent']">
+  <div id="good" ref="good" :class="animationStyle['good']">
+    <div id="excellent" ref="excellent" :class="animationStyle['excellent']">
     </div>
   </div>
 </template>
@@ -23,10 +23,6 @@ export default class Areas extends Vue {
   mapStyles: {[index: string]: string} = {
     good: 'good-animation',
     excellent: 'excellent-animation'
-  }
-
-  get lastStyle () {
-    return this.animationStyle
   }
 
   mounted (): void {
