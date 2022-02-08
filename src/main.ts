@@ -7,11 +7,16 @@ import Vuelidate from 'vuelidate'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import { firebaseConfig } from '@/firebaseconfig'
+import firebase from 'firebase/compat'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
+firebase.initializeApp(firebaseConfig)
+
+Vue.config.productionTip = false
 
 new Vue({
   router,

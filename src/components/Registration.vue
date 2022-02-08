@@ -50,7 +50,7 @@
 
       <button type="submit"
               class="btn btn-primary"
-              @click="redirectOnSubmit"
+              @click.prevent="onSubmit"
               :disabled="$v.$error || !$v.$dirty"
       >
         Submit
@@ -65,6 +65,7 @@ import Component from 'vue-class-component'
 import { validatePassword } from '@/validators/helpers'
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/lib/validators'
+import { firebaseCreateUser } from '@/api/firebasehelpers'
 
 @Component({
   mixins: [validationMixin],
@@ -87,11 +88,8 @@ export default class Registration extends Vue {
     return email.length > 0 && pass.length > 0
   }
 
-  redirectOnSubmit (): void {
-    this.$router.push({
-      name: 'About',
-      params: { email: this.email, password: this.password }
-    })
+  onSubmit (): void {
+    firebaseCreateUser(this.email, this.password)
   }
 }
 </script>
