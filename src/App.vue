@@ -4,6 +4,10 @@
       <router-link to="/sign-up">Registration</router-link>
       |
       <router-link
+        to="/auth">Login
+      </router-link>
+      |
+      <router-link
         :to="{ name: 'About', params: { email: 'Empty email', password: 'Empty password'}}">About
       </router-link>
     </div>
