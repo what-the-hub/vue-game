@@ -66,6 +66,8 @@ import { validatePassword } from '@/validators/helpers'
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/lib/validators'
 import { firebaseCreateUser } from '@/api/firebasehelpers'
+import { EActionUser, IUserDB } from '@/store/modules/user/typesUser'
+import { StoreModuleEnum } from '@/store/types'
 
 @Component({
   mixins: [validationMixin],
@@ -88,8 +90,17 @@ export default class Registration extends Vue {
     return email.length > 0 && pass.length > 0
   }
 
-  onSubmit (): void {
-    firebaseCreateUser(this.email, this.password)
+  async onSubmit () {
+    const response = await firebaseCreateUser(this.email, this.password)
+    this.setUserState(response)
+    await this.$router.push('/game')
+  }
+
+  setUserState (payload: IUserDB | undefined): void {
+    this.$store.dispatch(
+      `${StoreModuleEnum.userStore}/${EActionUser.SET_USER}`,
+      payload
+    )
   }
 }
 </script>
