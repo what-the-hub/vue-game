@@ -18,6 +18,6 @@ export async function firebaseSignIn (email: string, password: string): Promise<
       .signInWithEmailAndPassword(email, password)
     return { email: resp.user?.email, uid: resp.user?.uid }
   } catch (error) {
-    alert(error.message)
+    throw new Error(error.message)
   }
 }
