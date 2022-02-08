@@ -10,3 +10,13 @@ export async function firebaseCreateUser (email: string, password: string) {
     alert(error.message)
   }
 }
+export async function firebaseSignIn (email: string, password: string) {
+  try {
+    const resp = await firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+    console.log(resp, 'yes')
+  } catch (error) {
+    alert(error.message)
+  }
+}
