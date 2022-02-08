@@ -52,7 +52,7 @@
         <router-link class="action-href" to="/sign-up">Register</router-link>
         <button type="submit"
                 class="btn btn-primary"
-                @click="redirectOnLogin"
+                @click.prevent="onLogin"
                 :disabled="$v.$error || !$v.$dirty"
         >
           Login
@@ -70,6 +70,7 @@ import Component from 'vue-class-component'
 import { validatePassword } from '@/validators/helpers'
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/lib/validators'
+import { firebaseSignIn } from '@/api/firebasehelpers'
 
 @Component({
   mixins: [validationMixin],
@@ -92,11 +93,8 @@ export default class Auth extends Vue {
     return email.length > 0 && pass.length > 0
   }
 
-  redirectOnLogin (): void {
-    this.$router.push({
-      name: 'About',
-      params: { email: this.email, password: this.password }
-    })
+  onLogin (): void {
+    firebaseSignIn(this.email, this.password)
   }
 }
 </script>
