@@ -16,8 +16,6 @@ Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
 firebase.initializeApp(firebaseConfig)
 
-Vue.config.productionTip = false
-
 new Vue({
   router,
   store,
