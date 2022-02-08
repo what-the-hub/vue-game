@@ -1,7 +1,5 @@
 import { ActionContext } from 'vuex'
 import { RootStateInterface } from '@/store/types'
-import firebase from 'firebase/compat'
-import User = firebase.User;
 
 export enum EMutationUser {
   // eslint-disable-next-line no-unused-vars
@@ -14,15 +12,21 @@ export enum EActionUser {
 }
 
 export enum EGetterUser {
+  // eslint-disable-next-line no-unused-vars
+  GET_USER_EMAIL= 'GET_USER_EMAIL'
+}
 
+export interface IUserDB {
+  email: string | null | undefined
+  uid: string | undefined
 }
 
 export interface IStateUser {
-  userDB: User | null
+  userDB: IUserDB | null
 }
 
 export type Mutations<S = IStateUser> = {
-  [EMutationUser.SET_USER](state: S, payload: User): void,
+  [EMutationUser.SET_USER](state: S, payload: IUserDB): void,
 }
 
 export type AugmentedActionContext = {
@@ -33,5 +37,9 @@ export type AugmentedActionContext = {
 } & Omit<ActionContext<IStateUser, RootStateInterface>, 'commit'>
 
 export interface Actions {
-  [EActionUser.SET_USER]({ commit }: AugmentedActionContext, payload: User): void,
+  [EActionUser.SET_USER]({ commit }: AugmentedActionContext, payload: IUserDB): void,
+}
+
+export type Getters<S = IStateUser> = {
+  [EGetterUser.GET_USER_EMAIL](state: S): IUserDB['email']
 }
