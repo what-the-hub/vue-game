@@ -1,7 +1,10 @@
 <template>
   <div id="game" ref="game">
+    <div id="user-name">
+      Username: {{ userEmail }}
+    </div>
     <div id="score">
-      {{ this.$store.state.scoreStore.score }}
+      Score: {{ this.$store.state.scoreStore.score }}
     </div>
     <button class="button-base" @click="startGame">start</button>
     <button class="button-base mt-5" @click="stopGame">stop</button>
@@ -25,6 +28,7 @@ import { EActionScore } from '@/store/modules/score/typesScore'
 import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
 import { getRandom } from '@/helpers/getRandomHelper'
 import Areas from '@/gameComponents/Areas.vue'
+import { EGetterUser } from '@/store/modules/user/typesUser'
 
 @Component({
   components: {
@@ -38,6 +42,12 @@ export default class Board extends Vue {
 
   get storeArrows (): IArrowData[] {
     return this.$store.state.arrowStore.arrowsData
+  }
+
+  get userEmail (): string {
+    return this.$store.getters[
+      `${StoreModuleEnum.userStore}/${EGetterUser.GET_USER_EMAIL}`
+    ] || 'Unauthorized user'
   }
 
   setPositions (value: IAreasPositions): void {
