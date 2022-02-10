@@ -4,11 +4,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Vuelidate from 'vuelidate'
+import { firebaseConfig } from '@/firebaseconfig'
+import * as firebase from 'firebase/app'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import { firebaseConfig } from '@/firebaseconfig'
-import firebase from 'firebase/compat'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
