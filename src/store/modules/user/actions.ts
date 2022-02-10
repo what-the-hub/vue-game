@@ -7,5 +7,11 @@ export const actions: ActionTree<IStateUser, RootStateInterface> & Actions = {
     commit
   }, payload) => {
     commit(EMutationUser.SET_USER, payload)
+  },
+  [EActionUser.CHECK_LOCAL_STORAGE_USER]: ({
+    commit
+  }, payload) => {
+    console.log('checked: ', payload)
+    commit(EMutationUser.SET_LOCAL_STORAGE_USER, payload)
   }
 }

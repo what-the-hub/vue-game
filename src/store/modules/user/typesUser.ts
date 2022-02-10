@@ -1,14 +1,20 @@
 import { ActionContext } from 'vuex'
 import { RootStateInterface } from '@/store/types'
+import firebase from 'firebase/compat'
+import User = firebase.User;
 
 export enum EMutationUser {
   // eslint-disable-next-line no-unused-vars
-  SET_USER = 'SET_USER'
+  SET_USER = 'SET_USER',
+  // eslint-disable-next-line no-unused-vars
+  SET_LOCAL_STORAGE_USER = 'SET_LOCAL_STORAGE_USER'
 }
 
 export enum EActionUser {
   // eslint-disable-next-line no-unused-vars
-  SET_USER = 'SET_USER'
+  SET_USER = 'SET_USER',
+  // eslint-disable-next-line no-unused-vars
+  CHECK_LOCAL_STORAGE_USER = 'CHECK_LOCAL_STORAGE_USER'
 }
 
 export enum EGetterUser {
@@ -22,11 +28,13 @@ export interface IUserDB {
 }
 
 export interface IStateUser {
-  userDB: IUserDB | null
+  userDB: IUserDB | null,
+  user: User | null
 }
 
 export type Mutations<S = IStateUser> = {
   [EMutationUser.SET_USER](state: S, payload: IUserDB): void,
+  [EMutationUser.SET_LOCAL_STORAGE_USER](state: S, payload: IStateUser['user']): void
 }
 
 export type AugmentedActionContext = {
@@ -38,6 +46,9 @@ export type AugmentedActionContext = {
 
 export interface Actions {
   [EActionUser.SET_USER]({ commit }: AugmentedActionContext, payload: IUserDB): void,
+  [EActionUser.CHECK_LOCAL_STORAGE_USER](
+    { commit }: AugmentedActionContext, payload: IStateUser['user']
+  ): void,
 }
 
 export type Getters<S = IStateUser> = {

@@ -8,6 +8,9 @@ import {
 export const mutations: MutationTree<IStateUser> & Mutations = {
   [EMutationUser.SET_USER]: (state, payload) => {
     state.userDB = payload
-    console.log('new state', state.userDB)
+  },
+  [EMutationUser.SET_LOCAL_STORAGE_USER]: (state, payload) => {
+    state.user = payload
+    console.log('new state', state.user)
   }
 }

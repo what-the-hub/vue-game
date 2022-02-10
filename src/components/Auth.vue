@@ -70,7 +70,7 @@ import Component from 'vue-class-component'
 import { validatePassword } from '@/validators/helpers'
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/lib/validators'
-import { firebaseSignIn } from '@/api/firebasehelpers'
+import { newFirebaseSignIn } from '@/api/firebasehelpers'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionUser, IUserDB } from '@/store/modules/user/typesUser'
 
@@ -96,7 +96,7 @@ export default class Auth extends Vue {
   }
 
   async onLogin () {
-    const response = await firebaseSignIn(this.email, this.password)
+    const response = await newFirebaseSignIn(this.email, this.password)
     this.setUserState(response)
     await this.$router.push('/game')
   }

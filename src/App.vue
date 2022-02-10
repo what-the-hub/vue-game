@@ -11,9 +11,27 @@
         :to="{ name: 'About', params: { email: 'Empty email', password: 'Empty password'}}">About
       </router-link>
     </div>
+    <button @click.prevent="signOut">logout</button>
     <router-view/>
   </div>
 </template>
+
+<script lang="ts">
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
+import { checkUser, logOut } from '@/api/firebasehelpers'
+
+@Component
+export default class App extends Vue {
+  created () {
+    checkUser()
+  }
+
+  signOut () {
+    logOut()
+  }
+}
+</script>
 
 <style lang="sass">
 #app

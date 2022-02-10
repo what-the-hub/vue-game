@@ -50,6 +50,12 @@ export default class Board extends Vue {
     ] || 'Unauthorized user'
   }
 
+  mounted () {
+    if (localStorage.getItem('token')) {
+      console.log('incomp: ', localStorage.getItem('token'))
+    }
+  }
+
   setPositions (value: IAreasPositions): void {
     this.positions = value
   }
