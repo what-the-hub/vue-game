@@ -1,9 +1,11 @@
 import { ActionContext } from 'vuex'
 import { RootStateInterface } from '@/store/types'
+import firebase from 'firebase/compat'
+import User = firebase.User;
 
 export enum EMutationUser {
   // eslint-disable-next-line no-unused-vars
-  SET_USER = 'SET_USER'
+  SET_USER = 'SET_USER',
 }
 
 export enum EActionUser {
@@ -13,20 +15,17 @@ export enum EActionUser {
 
 export enum EGetterUser {
   // eslint-disable-next-line no-unused-vars
-  GET_USER_EMAIL= 'GET_USER_EMAIL'
-}
-
-export interface IUserDB {
-  email: string | null | undefined
-  uid: string | undefined
+  GET_USER_EMAIL= 'GET_USER_EMAIL',
+  // eslint-disable-next-line no-unused-vars
+  GET_USER_DATA= 'GET_USER_DATA'
 }
 
 export interface IStateUser {
-  userDB: IUserDB | null
+  user: User | null
 }
 
 export type Mutations<S = IStateUser> = {
-  [EMutationUser.SET_USER](state: S, payload: IUserDB): void,
+  [EMutationUser.SET_USER](state: S, payload: IStateUser['user']): void
 }
 
 export type AugmentedActionContext = {
@@ -37,9 +36,12 @@ export type AugmentedActionContext = {
 } & Omit<ActionContext<IStateUser, RootStateInterface>, 'commit'>
 
 export interface Actions {
-  [EActionUser.SET_USER]({ commit }: AugmentedActionContext, payload: IUserDB): void,
+  [EActionUser.SET_USER](
+    { commit }: AugmentedActionContext, payload: IStateUser['user']
+  ): void,
 }
 
 export type Getters<S = IStateUser> = {
-  [EGetterUser.GET_USER_EMAIL](state: S): IUserDB['email']
+  [EGetterUser.GET_USER_EMAIL](state: S): string | null | undefined,
+  [EGetterUser.GET_USER_DATA](state: S): any
 }

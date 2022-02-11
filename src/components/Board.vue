@@ -29,6 +29,7 @@ import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
 import { getRandom } from '@/helpers/getRandomHelper'
 import Areas from '@/gameComponents/Areas.vue'
 import { EGetterUser } from '@/store/modules/user/typesUser'
+import 'vue-class-component/hooks'
 
 @Component({
   components: {

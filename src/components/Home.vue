@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <Registration/>
+    <Board/>
   </div>
 </template>
 
 <script lang="ts">
 
 import { Component, Vue } from 'vue-property-decorator'
-import Registration from '@/components/Registration.vue'
+import Board from '@/components/Board.vue'
 
 @Component({
   components: {
-    Registration
+    Board
   }
 })
 export default class Home extends Vue {}

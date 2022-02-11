@@ -1,11 +1,9 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../views/Home.vue'
 import Registration from '@/components/Registration.vue'
-import About from '@/views/About.vue'
 import Board from '@/components/Board.vue'
-import Arrow from '@/gameComponents/Arrow.vue'
 import Auth from '@/components/Auth.vue'
+import { checkUser, isAnyUserLoggedIn } from '@/api/firebasehelpers'
 
 Vue.use(VueRouter)
 
@@ -13,7 +11,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Auth
   },
   {
     path: '/sign-up',
@@ -29,17 +27,6 @@ const routes: Array<RouteConfig> = [
     path: '/game',
     name: 'Game',
     component: Board
-  },
-  {
-    path: '/arrow',
-    name: 'Arrow',
-    component: Arrow
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: About,
-    props: true
   }
 ]
 
@@ -47,6 +34,16 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach(async (to, from, next) => {
+  const isUserLogged: boolean = await isAnyUserLoggedIn()
+  checkUser()
+  if (to.name === 'Game' && !isUserLogged) {
+    console.log('not logged user')
+    next('auth')
+  }
+  next()
 })
 
 export default router

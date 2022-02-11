@@ -6,7 +6,7 @@ import { RootStateInterface } from '@/store/types'
 import { IStateUser } from '@/store/modules/user/typesUser'
 
 export const state: IStateUser = {
-  userDB: null
+  user: null
 }
 
 export const userStore: Module<IStateUser, RootStateInterface> = {
