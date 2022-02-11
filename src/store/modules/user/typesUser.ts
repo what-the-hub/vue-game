@@ -15,7 +15,9 @@ export enum EActionUser {
 
 export enum EGetterUser {
   // eslint-disable-next-line no-unused-vars
-  GET_USER_EMAIL= 'GET_USER_EMAIL'
+  GET_USER_EMAIL= 'GET_USER_EMAIL',
+  // eslint-disable-next-line no-unused-vars
+  GET_USER_DATA= 'GET_USER_DATA'
 }
 
 export interface IStateUser {
@@ -40,5 +42,6 @@ export interface Actions {
 }
 
 export type Getters<S = IStateUser> = {
-  [EGetterUser.GET_USER_EMAIL](state: S): string | null | undefined
+  [EGetterUser.GET_USER_EMAIL](state: S): string | null | undefined,
+  [EGetterUser.GET_USER_DATA](state: S): any
 }

@@ -29,6 +29,7 @@ import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
 import { getRandom } from '@/helpers/getRandomHelper'
 import Areas from '@/gameComponents/Areas.vue'
 import { EGetterUser } from '@/store/modules/user/typesUser'
+import 'vue-class-component/hooks'
 
 @Component({
   components: {
@@ -48,12 +49,6 @@ export default class Board extends Vue {
     return this.$store.getters[
       `${StoreModuleEnum.userStore}/${EGetterUser.GET_USER_EMAIL}`
     ] || 'Unauthorized user'
-  }
-
-  mounted () {
-    if (localStorage.getItem('token')) {
-      console.log('incomp: ', localStorage.getItem('token'))
-    }
   }
 
   setPositions (value: IAreasPositions): void {

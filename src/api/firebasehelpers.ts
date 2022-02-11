@@ -1,19 +1,19 @@
 import { EActionUser } from '@/store/modules/user/typesUser'
-import { getAuth, setPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, browserLocalPersistence } from 'firebase/auth'
+import {
+  getAuth,
+  setPersistence,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  browserLocalPersistence
+} from 'firebase/auth'
 import store from '../store'
 import { StoreModuleEnum } from '@/store/types'
 
-export async function firebaseCreateUser (email: string, password: string) {
-  const auth = getAuth()
-  try {
-    await setPersistence(auth, browserLocalPersistence)
-    await createUserWithEmailAndPassword(auth, email, password)
-  } catch (error) {
-    throw new Error(error.message)
-  }
-}
-
-export async function firebaseAction (action: string, email: string, password: string) {
+export async function firebaseAction (
+  action: string, email: string, password: string
+): Promise<void> {
   const auth = getAuth()
   try {
     await setPersistence(auth, browserLocalPersistence)
@@ -21,10 +21,11 @@ export async function firebaseAction (action: string, email: string, password: s
       case 'authorisation':
         await signInWithEmailAndPassword(auth, email, password)
         break
-      case 'register':
+      case 'registration':
         await createUserWithEmailAndPassword(auth, email, password)
         break
-      default: console.log('Something wrong')
+      default:
+        console.log('Something wrong')
     }
   } catch (error) {
     throw new Error(error.message)
@@ -32,25 +33,44 @@ export async function firebaseAction (action: string, email: string, password: s
 }
 
 export function checkUser (): void {
-  const auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(getAuth(), async (user) => {
     if (user) {
-      store.dispatch(
+      await store.dispatch(
         `${StoreModuleEnum.userStore}/${EActionUser.SET_USER}`, user
       )
     } else {
-      store.dispatch(
+      await store.dispatch(
         `${StoreModuleEnum.userStore}/${EActionUser.SET_USER}`, null
       )
     }
   })
 }
 
-export async function logOut () {
-  const auth = getAuth()
+export async function logOut (): Promise<void> {
   try {
-    await signOut(auth)
+    await signOut(getAuth())
   } catch (error) {
     throw new Error(error.message)
+  }
+}
+
+export async function isAnyUserLoggedIn (): Promise<boolean> {
+  try {
+    await new Promise((resolve, reject) => {
+      getAuth().onAuthStateChanged(
+        user => {
+          if (user) {
+            resolve(user)
+          } else {
+            // eslint-disable-next-line prefer-promise-reject-errors
+            reject()
+          }
+        }
+      )
+    }
+    )
+    return true
+  } catch (error) {
+    return false
   }
 }

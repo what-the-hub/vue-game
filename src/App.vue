@@ -8,10 +8,10 @@
       </router-link>
       |
       <router-link
-        :to="{ name: 'About', params: { email: 'Empty email', password: 'Empty password'}}">About
+        to="/game">Game
       </router-link>
     </div>
-    <button @click.prevent="signOut">logout</button>
+    <button @click="signOut">logout</button>
     <router-view/>
   </div>
 </template>
@@ -19,16 +19,16 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { checkUser, logOut } from '@/api/firebasehelpers'
+import { logOut } from '@/api/firebasehelpers'
+import 'vue-class-component/hooks'
 
 @Component
 export default class App extends Vue {
-  created () {
-    checkUser()
-  }
-
   signOut () {
     logOut()
+    if (this.$route.path !== '/auth') {
+      this.$router.push('/auth')
+    } else this.$router.push('/')
   }
 }
 </script>
