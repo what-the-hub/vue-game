@@ -8,9 +8,9 @@
     </div>
     <button class="button-base" @click="startGame">start</button>
     <button class="button-base mt-5" @click="stopGame">stop</button>
+    <button style="margin-top: 80px" @click="getDataDB">stop</button>
     <areas @calculate-positions="setPositions" />
     <arrow
-      ref="test"
       v-for="n in storeArrows"
       :key="n.id"
     />
@@ -30,6 +30,7 @@ import { getRandom } from '@/helpers/getRandomHelper'
 import Areas from '@/gameComponents/Areas.vue'
 import { EGetterUser } from '@/store/modules/user/typesUser'
 import 'vue-class-component/hooks'
+import { addUser, getDB, onChange } from '@/api/DBFirebaseHelpers'
 
 @Component({
   components: {
@@ -136,6 +137,15 @@ export default class Board extends Vue {
 
   addArrow (): void {
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
+  }
+
+  mounted () {
+    onChange()
+  }
+
+  async getDataDB () {
+    await getDB()
+    await addUser()
   }
 }
 </script>

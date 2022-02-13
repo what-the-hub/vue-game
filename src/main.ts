@@ -6,6 +6,7 @@ import store from './store'
 import Vuelidate from 'vuelidate'
 import { firebaseConfig } from '@/firebaseconfig'
 import * as firebase from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -15,6 +16,7 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(Vuelidate)
 firebase.initializeApp(firebaseConfig)
+export const db = getFirestore()
 
 new Vue({
   router,
