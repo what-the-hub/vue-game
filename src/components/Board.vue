@@ -169,6 +169,7 @@ export default class Board extends Vue {
   watchArrowsExists (newValue: IArrowData[]) {
     if (newValue.length === 0 && !this.isActive) {
       console.log(this.getGameData())
+      this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.RESET_SCORE}`)
     }
   }
 }
