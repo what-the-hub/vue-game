@@ -1,4 +1,4 @@
-import { doc, getDoc, collection, setDoc, query, where, onSnapshot } from 'firebase/firestore'
+import { doc, getDoc, collection, setDoc, query, where, onSnapshot, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '@/main'
 
 export async function getDB () {
@@ -26,6 +26,17 @@ export async function addUser () {
     }
     ],
     uid: 'TESTNEWUSER123'
+  })
+}
+
+export async function updateUserDB () {
+  const usersRef = doc(db, 'users', 'new user 2')
+  const newData = [{
+    date: 999,
+    score: 999
+  }]
+  await updateDoc(usersRef, {
+    scoreList: arrayUnion(...newData)
   })
 }
 

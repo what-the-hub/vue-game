@@ -30,7 +30,7 @@ import { getRandom } from '@/helpers/getRandomHelper'
 import Areas from '@/gameComponents/Areas.vue'
 import { EGetterUser } from '@/store/modules/user/typesUser'
 import 'vue-class-component/hooks'
-import { addUser, getDB, onChange } from '@/api/DBFirebaseHelpers'
+import { getDB, onChange, updateUserDB } from '@/api/DBFirebaseHelpers'
 
 @Component({
   components: {
@@ -145,7 +145,8 @@ export default class Board extends Vue {
 
   async getDataDB () {
     await getDB()
-    await addUser()
+    await updateUserDB()
+    // await addUser()
   }
 }
 </script>
