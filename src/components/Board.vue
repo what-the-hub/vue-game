@@ -1,26 +1,40 @@
 <template>
-  <div id="game" ref="game">
-    <div id="user-name">
-      Username: {{ userEmail }}
+  <div class="board-wrapper">
+    <div id="game" ref="game">
+      <div id="user-name">
+        Username: {{ userEmail }}
+      </div>
+      <div id="score">
+        Score: {{ this.$store.state.scoreStore.score }}
+      </div>
+      <button
+        class="button-base"
+        @click="startGame"
+        :disabled="storeArrows.length !== 0"
+      >
+        start
+      </button>
+      <button
+        class="button-base mt-5"
+        @click="stopGame"
+        :disabled="storeArrows.length === 0"
+      >
+        stop
+      </button>
+      <areas @calculate-positions="setPositions" />
+      <arrow
+        v-for="n in storeArrows"
+        :key="n.id"
+      />
     </div>
-    <div id="score">
-      Score: {{ this.$store.state.scoreStore.score }}
-    </div>
-    <button class="button-base" @click="startGame">start</button>
-    <button class="button-base mt-5" @click="stopGame">stop</button>
-    <button style="margin-top: 80px" @click="getDataDB">stop</button>
-    <areas @calculate-positions="setPositions" />
-    <arrow
-      v-for="n in storeArrows"
-      :key="n.id"
-    />
+    <score-list></score-list>
   </div>
 </template>
 
 <script lang="ts">
 
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import Arrow from '@/gameComponents/Arrow.vue'
 import { EDirection, IAreasPositions } from '@/types'
 import { StoreModuleEnum } from '@/store/types'
@@ -30,11 +44,11 @@ import { getRandom } from '@/helpers/getRandomHelper'
 import Areas from '@/gameComponents/Areas.vue'
 import { EGetterUser } from '@/store/modules/user/typesUser'
 import 'vue-class-component/hooks'
-import { getDB, onChange, updateUserDB } from '@/api/DBFirebaseHelpers'
+import ScoreList from '@/gameComponents/ScoreList.vue'
 
 @Component({
   components: {
-    Arrow, Areas
+    Arrow, Areas, ScoreList
   }
 })
 export default class Board extends Vue {
@@ -139,14 +153,23 @@ export default class Board extends Vue {
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
   }
 
-  mounted () {
-    onChange()
+  getGameData () {
+    return {
+      userData: this.$store.getters[
+        `${StoreModuleEnum.userStore}/${EGetterUser.GET_USER_DATA}`
+      ],
+      scoreData: {
+        date: Date.now(),
+        score: this.$store.state.scoreStore.score
+      }
+    }
   }
 
-  async getDataDB () {
-    await getDB()
-    await updateUserDB()
-    // await addUser()
+  @Watch('storeArrows')
+  watchArrowsExists (newValue: IArrowData[]) {
+    if (newValue.length === 0 && !this.isActive) {
+      console.log(this.getGameData())
+    }
   }
 }
 </script>
@@ -157,11 +180,11 @@ export default class Board extends Vue {
   margin: 0
 
 #game
-  width: 500px
-  height: 500px
+  width: 70%
   box-sizing: content-box
   border: 1px solid black
-  margin: auto
+  height: 100%
+
   position: relative
   overflow: hidden
 
@@ -169,4 +192,9 @@ export default class Board extends Vue {
   position: absolute
   top: 0
   right: 0
+
+.board-wrapper
+  display: flex
+  flex-flow: row nowrap
+  height: 500px
 </style>

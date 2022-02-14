@@ -12,7 +12,7 @@ export async function getDB () {
   }
 }
 
-export async function addUser () {
+export async function addUser (uid: string, email: string) {
   const usersRef = collection(db, 'users')
   await setDoc(doc(usersRef, 'new user 2'), {
     email: 'new user 23 test',
@@ -27,6 +27,17 @@ export async function addUser () {
     ],
     uid: 'TESTNEWUSER123'
   })
+}
+
+export async function checkUser (uid: string, email: string) {
+  console.log('Got this data in fb: ', uid, email)
+  const usersRef = doc(db, 'users', uid)
+  const docSnap = await getDoc(usersRef)
+  if (docSnap.exists()) {
+    console.log('Documents data: ', docSnap.data())
+  } else {
+    console.log('no document')
+  }
 }
 
 export async function updateUserDB () {
