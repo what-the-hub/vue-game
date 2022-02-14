@@ -1,13 +1,13 @@
 import { doc, getDoc, collection, setDoc, query, where, onSnapshot, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '@/main'
-import { IFirestoreScore, IFirestoreUser, IFirestoreUserScore } from '@/types'
+import { ICurrentUserDB, IFirestoreScore, IFirestoreUser, IFirestoreUserScore } from '@/types'
 
-export async function getDB () {
-  const docRef = doc(db, 'users', 'bJMUJTaOJg0AH0PH7ot1')
+export async function getCurrentUser (uid: string) {
+  const docRef = doc(db, 'users', uid)
   const docSnap = await getDoc(docRef)
-  console.log(db)
   if (docSnap.exists()) {
     console.log('Document data: ', docSnap.data())
+    return docSnap.data() as ICurrentUserDB
   } else {
     console.log('Noooo')
   }
@@ -26,7 +26,7 @@ export async function checkAndUpdateUser (data: IFirestoreUserScore) {
   const usersRef = doc(db, 'users', data.userData.uid)
   const docSnap = await getDoc(usersRef)
   if (docSnap.exists()) {
-    console.log('User exists ')
+    console.log('in checkAndUpdate ', data)
     await updateUserScore(data)
   } else {
     console.log('no document')
@@ -44,6 +44,7 @@ export async function updateUserScore (data: IFirestoreUserScore) {
   await updateDoc(usersRef, {
     scoreList: arrayUnion(...newData)
   })
+  console.log('in update usecscore ', data)
 }
 
 export async function onChange () {

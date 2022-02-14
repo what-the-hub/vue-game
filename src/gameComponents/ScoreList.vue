@@ -1,6 +1,6 @@
 <template>
   <div class="score-wrapper">
-    <button style="margin-top: 80px" @click="getDataDB">stop</button>
+    {{newScoreList}}
   </div>
 </template>
 
@@ -9,18 +9,19 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import 'vue-class-component/hooks'
-import { getDB, onChange, updateUserDB } from '@/api/DBFirebaseHelpers'
+import { StoreModuleEnum } from '@/store/types'
+import { EActionUser } from '@/store/modules/user/typesUser'
 
 @Component
 export default class ScoreList extends Vue {
-  mounted () {
-    onChange()
+  async mounted () {
+    await this.$store.dispatch(
+      `${StoreModuleEnum.userStore}/${EActionUser.GET_DB_SCORE}`
+    )
   }
 
-  async getDataDB () {
-    await getDB()
-    await updateUserDB()
-    // await addUser()
+  get newScoreList () {
+    return this.$store.state.userStore.scoreFromDB
   }
 }
 </script>

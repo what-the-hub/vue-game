@@ -42,7 +42,7 @@ import { EActionScore } from '@/store/modules/score/typesScore'
 import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
 import { getRandom } from '@/helpers/getRandomHelper'
 import Areas from '@/gameComponents/Areas.vue'
-import { EGetterUser } from '@/store/modules/user/typesUser'
+import { EActionUser, EGetterUser } from '@/store/modules/user/typesUser'
 import 'vue-class-component/hooks'
 import ScoreList from '@/gameComponents/ScoreList.vue'
 import { checkAndUpdateUser } from '@/api/DBFirebaseHelpers'
@@ -59,6 +59,10 @@ export default class Board extends Vue {
 
   get storeArrows (): IArrowData[] {
     return this.$store.state.arrowStore.arrowsData
+  }
+
+  get storeScore (): number {
+    return this.$store.state.scoreStore.score
   }
 
   get userEmail (): string {
@@ -155,11 +159,15 @@ export default class Board extends Vue {
   }
 
   @Watch('storeArrows')
-  watchArrowsExists (newValue: IArrowData[]) {
+  async watchArrowsExists (newValue: IArrowData[]) {
     if (newValue.length === 0 && !this.isActive) {
       const gameData = this.getGameData()
+      console.log(gameData, 'new')
       this.resetScore()
-      checkAndUpdateUser(gameData)
+      await checkAndUpdateUser(gameData)
+      await this.$store.dispatch(
+        `${StoreModuleEnum.userStore}/${EActionUser.GET_DB_SCORE}`
+      )
     }
   }
 
@@ -170,7 +178,7 @@ export default class Board extends Vue {
       ],
       scoreData: {
         date: Date.now(),
-        score: this.$store.state.scoreStore.score
+        score: this.storeScore
       }
     }
   }

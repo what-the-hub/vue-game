@@ -30,3 +30,8 @@ export interface IFirestoreUserScore {
   userData: IFirestoreUser,
   scoreData: IFirestoreScore
 }
+
+export interface ICurrentUserDB {
+  scoreList: IFirestoreScore[] | [],
+  email: string
+}
