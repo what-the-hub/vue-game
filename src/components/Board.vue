@@ -36,7 +36,7 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import Arrow from '@/gameComponents/Arrow.vue'
-import { EDirection, IAreasPositions } from '@/types'
+import { EDirection, IAreasPositions, IFirestoreUserScore } from '@/types'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionScore } from '@/store/modules/score/typesScore'
 import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
@@ -45,6 +45,7 @@ import Areas from '@/gameComponents/Areas.vue'
 import { EGetterUser } from '@/store/modules/user/typesUser'
 import 'vue-class-component/hooks'
 import ScoreList from '@/gameComponents/ScoreList.vue'
+import { checkAndUpdateUser } from '@/api/DBFirebaseHelpers'
 
 @Component({
   components: {
@@ -153,7 +154,16 @@ export default class Board extends Vue {
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
   }
 
-  getGameData () {
+  @Watch('storeArrows')
+  watchArrowsExists (newValue: IArrowData[]) {
+    if (newValue.length === 0 && !this.isActive) {
+      const gameData = this.getGameData()
+      this.resetScore()
+      checkAndUpdateUser(gameData)
+    }
+  }
+
+  getGameData (): IFirestoreUserScore {
     return {
       userData: this.$store.getters[
         `${StoreModuleEnum.userStore}/${EGetterUser.GET_USER_DATA}`
@@ -165,12 +175,10 @@ export default class Board extends Vue {
     }
   }
 
-  @Watch('storeArrows')
-  watchArrowsExists (newValue: IArrowData[]) {
-    if (newValue.length === 0 && !this.isActive) {
-      console.log(this.getGameData())
-      this.$store.dispatch(`${StoreModuleEnum.scoreStore}/${EActionScore.RESET_SCORE}`)
-    }
+  resetScore (): void {
+    this.$store.dispatch(
+      `${StoreModuleEnum.scoreStore}/${EActionScore.RESET_SCORE}`
+    )
   }
 }
 </script>

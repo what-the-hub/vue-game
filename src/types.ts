@@ -15,3 +15,18 @@ export interface IAreasPositions {
   topExcellentArea: number,
   bottomExcellentArea: number
 }
+
+export interface IFirestoreUser {
+  uid: string,
+  email: string
+}
+
+export interface IFirestoreScore {
+  date: number,
+  score: number
+}
+
+export interface IFirestoreUserScore {
+  userData: IFirestoreUser,
+  scoreData: IFirestoreScore
+}

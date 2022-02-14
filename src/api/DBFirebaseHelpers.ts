@@ -1,5 +1,6 @@
 import { doc, getDoc, collection, setDoc, query, where, onSnapshot, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '@/main'
+import { IFirestoreScore, IFirestoreUser, IFirestoreUserScore } from '@/types'
 
 export async function getDB () {
   const docRef = doc(db, 'users', 'bJMUJTaOJg0AH0PH7ot1')
@@ -12,39 +13,33 @@ export async function getDB () {
   }
 }
 
-export async function addUser (uid: string, email: string) {
+export async function addUser (data: IFirestoreUser) {
   const usersRef = collection(db, 'users')
-  await setDoc(doc(usersRef, 'new user 2'), {
-    email: 'new user 23 test',
-    scoreList: [{
-      date: 11111111112,
-      score: 333
-    },
-    {
-      date: 222,
-      score: 111
-    }
-    ],
-    uid: 'TESTNEWUSER123'
+  await setDoc(doc(usersRef, data.uid), {
+    email: data.email,
+    scoreList: []
   })
 }
 
-export async function checkUser (uid: string, email: string) {
-  console.log('Got this data in fb: ', uid, email)
-  const usersRef = doc(db, 'users', uid)
+export async function checkAndUpdateUser (data: IFirestoreUserScore) {
+  // console.log('Got this data in fb: ', uid, email)
+  const usersRef = doc(db, 'users', data.userData.uid)
   const docSnap = await getDoc(usersRef)
   if (docSnap.exists()) {
-    console.log('Documents data: ', docSnap.data())
+    console.log('User exists ')
+    await updateUserScore(data)
   } else {
     console.log('no document')
+    await addUser(data.userData)
+    await checkAndUpdateUser(data)
   }
 }
 
-export async function updateUserDB () {
-  const usersRef = doc(db, 'users', 'new user 2')
-  const newData = [{
-    date: 999,
-    score: 999
+export async function updateUserScore (data: IFirestoreUserScore) {
+  const usersRef = doc(db, 'users', data.userData.uid)
+  const newData: IFirestoreScore[] = [{
+    date: data.scoreData.date,
+    score: data.scoreData.score
   }]
   await updateDoc(usersRef, {
     scoreList: arrayUnion(...newData)
