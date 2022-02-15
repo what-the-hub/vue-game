@@ -5,14 +5,18 @@ export enum EMutationScore {
   // eslint-disable-next-line no-unused-vars
   SET_POINTS = 'SET_POINTS',
   // eslint-disable-next-line no-unused-vars
-  SET_LAST_STYLE = 'SET_LAST_STYLE'
+  SET_LAST_STYLE = 'SET_LAST_STYLE',
+  // eslint-disable-next-line no-unused-vars
+  RESET_SCORE = 'RESET_SCORE'
 }
 
 export enum EActionScore {
   // eslint-disable-next-line no-unused-vars
   SET_POINTS = 'SET_POINTS',
   // eslint-disable-next-line no-unused-vars
-  SET_LAST_STYLE = 'SET_LAST_STYLE'
+  SET_LAST_STYLE = 'SET_LAST_STYLE',
+  // eslint-disable-next-line no-unused-vars
+  RESET_SCORE = 'RESET_SCORE'
 }
 
 export enum EGetterScore {
@@ -28,18 +32,20 @@ export interface IStateScore {
 export type Mutations<S = IStateScore> = {
   [EMutationScore.SET_POINTS](state: S, payload: number): void,
   [EMutationScore.SET_LAST_STYLE](state: S, payload: string): void
+  [EMutationScore.RESET_SCORE](state: S): void
 }
 
 export type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
     key: K,
-    payload: Parameters<Mutations[K]>[1]
+    payload?: Parameters<Mutations[K]>[1]
   ): ReturnType<Mutations[K]>
 } & Omit<ActionContext<IStateScore, RootStateInterface>, 'commit'>
 
 export interface Actions {
   [EActionScore.SET_POINTS]({ commit }: AugmentedActionContext, payload: number): void,
-  [EActionScore.SET_LAST_STYLE]({ commit }: AugmentedActionContext, payload: string): void
+  [EActionScore.SET_LAST_STYLE]({ commit }: AugmentedActionContext, payload: string): void,
+  [EActionScore.RESET_SCORE]({ commit }: AugmentedActionContext): void
 }
 
 export type Getters<S = IStateScore> = {

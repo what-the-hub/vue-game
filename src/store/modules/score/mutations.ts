@@ -11,5 +11,8 @@ export const mutations: MutationTree<IStateScore> & Mutations = {
   },
   [EMutationScore.SET_LAST_STYLE]: (state, payload) => {
     state.lastStyle = payload
+  },
+  [EMutationScore.RESET_SCORE]: (state) => {
+    state.score = 0
   }
 }

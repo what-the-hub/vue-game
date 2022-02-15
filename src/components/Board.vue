@@ -1,26 +1,40 @@
 <template>
-  <div id="game" ref="game">
-    <div id="user-name">
-      Username: {{ userEmail }}
+  <div class="board-wrapper">
+    <div id="game" ref="game">
+      <div id="user-name">
+        Username: {{ userEmail }}
+      </div>
+      <div id="score">
+        Score: {{ storeScore }}
+      </div>
+      <button
+        class="button-base"
+        @click="startGame"
+        :disabled="storeArrows.length !== 0"
+      >
+        start
+      </button>
+      <button
+        class="button-base mt-5"
+        @click="stopGame"
+        :disabled="!isActive"
+      >
+        stop
+      </button>
+      <areas @calculate-positions="setPositions"/>
+      <arrow
+        v-for="arrow in storeArrows"
+        :key="arrow.id"
+      />
     </div>
-    <div id="score">
-      Score: {{ this.$store.state.scoreStore.score }}
-    </div>
-    <button class="button-base" @click="startGame">start</button>
-    <button class="button-base mt-5" @click="stopGame">stop</button>
-    <areas @calculate-positions="setPositions" />
-    <arrow
-      ref="test"
-      v-for="n in storeArrows"
-      :key="n.id"
-    />
+    <score-list/>
   </div>
 </template>
 
 <script lang="ts">
 
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import Arrow from '@/gameComponents/Arrow.vue'
 import { EDirection, IAreasPositions } from '@/types'
 import { StoreModuleEnum } from '@/store/types'
@@ -28,12 +42,13 @@ import { EActionScore } from '@/store/modules/score/typesScore'
 import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
 import { getRandom } from '@/helpers/getRandomHelper'
 import Areas from '@/gameComponents/Areas.vue'
-import { EGetterUser } from '@/store/modules/user/typesUser'
+import { EActionUser, EGetterUser } from '@/store/modules/user/typesUser'
 import 'vue-class-component/hooks'
+import ScoreList from '@/gameComponents/ScoreList.vue'
 
 @Component({
   components: {
-    Arrow, Areas
+    Arrow, Areas, ScoreList
   }
 })
 export default class Board extends Vue {
@@ -45,10 +60,14 @@ export default class Board extends Vue {
     return this.$store.state.arrowStore.arrowsData
   }
 
+  get storeScore (): number {
+    return this.$store.state.scoreStore.score
+  }
+
   get userEmail (): string {
     return this.$store.getters[
       `${StoreModuleEnum.userStore}/${EGetterUser.GET_USER_EMAIL}`
-    ] || 'Unauthorized user'
+    ]
   }
 
   setPositions (value: IAreasPositions): void {
@@ -137,6 +156,30 @@ export default class Board extends Vue {
   addArrow (): void {
     this.$store.dispatch(`${StoreModuleEnum.arrowStore}/${EActionArrow.ADD_DATA}`)
   }
+
+  @Watch('storeArrows')
+  async watchArrowsExists (newValue: IArrowData[]) {
+    if (newValue.length === 0 && !this.isActive) {
+      try {
+        await this.storeUpdateDB()
+        this.resetScore()
+      } catch (e) {
+        throw new Error(e.message)
+      }
+    }
+  }
+
+  async storeUpdateDB () {
+    await this.$store.dispatch(
+      `${StoreModuleEnum.userStore}/${EActionUser.UPDATE_DB_SCORE}`, this.storeScore
+    )
+  }
+
+  resetScore (): void {
+    this.$store.dispatch(
+      `${StoreModuleEnum.scoreStore}/${EActionScore.RESET_SCORE}`
+    )
+  }
 }
 </script>
 
@@ -146,11 +189,11 @@ export default class Board extends Vue {
   margin: 0
 
 #game
-  width: 500px
-  height: 500px
+  width: 70%
   box-sizing: content-box
   border: 1px solid black
-  margin: auto
+  height: 100%
+
   position: relative
   overflow: hidden
 
@@ -158,4 +201,9 @@ export default class Board extends Vue {
   position: absolute
   top: 0
   right: 0
+
+.board-wrapper
+  display: flex
+  flex-flow: row nowrap
+  height: 500px
 </style>
