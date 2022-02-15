@@ -20,8 +20,10 @@ export const actions: ActionTree<IStateUser, RootStateInterface> & Actions = {
   [EActionUser.GET_DB_SCORE]: async ({
     commit
   }) => {
-    const payload: IFirestoreScore[] | undefined = await getCurrentUserScoreDB(state.user?.uid!)
-    commit(EMutationUser.SET_DB_SCORE, payload)
+    if (state.user) {
+      const payload: IFirestoreScore[] | undefined = await getCurrentUserScoreDB(state.user.uid)
+      commit(EMutationUser.SET_DB_SCORE, payload)
+    } else throw new Error('There are no authorised users')
   },
   [EActionUser.UPDATE_DB_SCORE]: async ({
     commit
