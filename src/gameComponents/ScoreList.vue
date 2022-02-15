@@ -1,6 +1,15 @@
 <template>
   <div class="score-wrapper">
-    <b-table striped hover :items="scoreList"></b-table>
+    <b-table
+      class="table"
+      striped
+      hover
+      sticky-header="100%"
+      bordered
+      outlined
+      :items="scoreList"
+    >
+    </b-table>
   </div>
 </template>
 
@@ -49,5 +58,12 @@ export default class ScoreList extends Vue {
   position: relative
   width: 30%
   height: 100%
-  background-color: aqua
+  box-sizing: content-box
+  border: 1px solid black
+
+.table
+  text-align: center
+  position: relative
+  height: 1000%
+  overflow-y: scroll
 </style>
