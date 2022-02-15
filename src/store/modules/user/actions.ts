@@ -15,7 +15,6 @@ export const actions: ActionTree<IStateUser, RootStateInterface> & Actions = {
     commit
   }) => {
     const payload: IFirestoreScore[] | undefined = await getCurrentUserScoreDB(state.user?.uid!)
-    console.log('FROM DB: ', payload)
     commit(EMutationUser.SET_DB_SCORE, payload)
   },
   [EActionUser.UPDATE_DB_SCORE]: async ({

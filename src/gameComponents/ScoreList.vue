@@ -42,7 +42,6 @@ export default class ScoreList extends Vue {
         hour12: false
       }
       const gotDate = new Date(value.date).toLocaleString('en-GB', dataOptions)
-      console.log(gotDate.toString())
       return { date: gotDate, score: value.score }
     }).reverse()
   }

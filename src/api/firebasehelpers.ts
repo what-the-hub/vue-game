@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth'
 import store from '../store'
 import { StoreModuleEnum } from '@/store/types'
+import { addUserToDB } from '@/api/DBFirebaseHelpers'
 
 export async function firebaseAction (
   action: string, email: string, password: string
@@ -17,15 +18,19 @@ export async function firebaseAction (
   const auth = getAuth()
   try {
     await setPersistence(auth, browserLocalPersistence)
+    let user
     switch (action) {
       case 'authorisation':
-        await signInWithEmailAndPassword(auth, email, password)
+        user = await signInWithEmailAndPassword(auth, email, password)
         break
       case 'registration':
-        await createUserWithEmailAndPassword(auth, email, password)
+        user = await createUserWithEmailAndPassword(auth, email, password)
         break
       default:
         console.log('Something wrong')
+    }
+    if (user) {
+      await addUserToDB(user.user.uid, user.user.email)
     }
   } catch (error) {
     throw new Error(error.message)
