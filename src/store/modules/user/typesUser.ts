@@ -2,7 +2,7 @@ import { ActionContext } from 'vuex'
 import { RootStateInterface } from '@/store/types'
 import firebase from 'firebase/compat'
 import User = firebase.User
-import { IFirestoreScore, IFirestoreUser, IFirestoreUserScore } from '@/types'
+import { IFirestoreScore, IFirestoreUser } from '@/types'
 
 export enum EMutationUser {
   // eslint-disable-next-line no-unused-vars
@@ -52,11 +52,11 @@ export interface Actions {
     { commit }: AugmentedActionContext, payload: any
   ): Promise<void>,
   [EActionUser.UPDATE_DB_SCORE](
-    { commit, dispatch }: AugmentedActionContext, payload: IFirestoreUserScore
+    { commit, dispatch }: AugmentedActionContext, payload: number
   ): Promise<void>,
 }
 
 export type Getters<S = IStateUser> = {
   [EGetterUser.GET_USER_EMAIL](state: S): string | null | undefined,
-  [EGetterUser.GET_USER_DATA](state: S): IFirestoreUser
+  [EGetterUser.GET_USER_DATA](state: S): IFirestoreUser | null
 }

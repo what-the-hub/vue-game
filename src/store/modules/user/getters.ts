@@ -8,9 +8,11 @@ export const getters: GetterTree<IStateUser, RootStateInterface> & Getters = {
   },
   [EGetterUser.GET_USER_DATA] (state) {
     const user = state.user
-    return {
-      uid: user?.uid,
-      email: user?.email
-    }
+    if (user) {
+      return {
+        uid: user.uid,
+        email: user.email
+      }
+    } else return null
   }
 }

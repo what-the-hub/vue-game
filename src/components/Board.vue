@@ -5,7 +5,7 @@
         Username: {{ userEmail }}
       </div>
       <div id="score">
-        Score: {{ this.$store.state.scoreStore.score }}
+        Score: {{ storeScore }}
       </div>
       <button
         class="button-base"
@@ -17,17 +17,17 @@
       <button
         class="button-base mt-5"
         @click="stopGame"
-        :disabled="storeArrows.length === 0"
+        :disabled="!isActive"
       >
         stop
       </button>
-      <areas @calculate-positions="setPositions" />
+      <areas @calculate-positions="setPositions"/>
       <arrow
-        v-for="n in storeArrows"
-        :key="n.id"
+        v-for="arrow in storeArrows"
+        :key="arrow.id"
       />
     </div>
-    <score-list></score-list>
+    <score-list/>
   </div>
 </template>
 
@@ -67,7 +67,7 @@ export default class Board extends Vue {
   get userEmail (): string {
     return this.$store.getters[
       `${StoreModuleEnum.userStore}/${EGetterUser.GET_USER_EMAIL}`
-    ] || 'Unauthorized user'
+    ]
   }
 
   setPositions (value: IAreasPositions): void {
@@ -161,15 +161,18 @@ export default class Board extends Vue {
   async watchArrowsExists (newValue: IArrowData[]) {
     if (newValue.length === 0 && !this.isActive) {
       try {
-        const gameData = this.getGameData()
+        await this.storeUpdateDB()
         this.resetScore()
-        await this.$store.dispatch(
-          `${StoreModuleEnum.userStore}/${EActionUser.UPDATE_DB_SCORE}`, gameData
-        )
       } catch (e) {
         throw new Error(e.message)
       }
     }
+  }
+
+  async storeUpdateDB () {
+    await this.$store.dispatch(
+      `${StoreModuleEnum.userStore}/${EActionUser.UPDATE_DB_SCORE}`, this.storeScore
+    )
   }
 
   getGameData (): IFirestoreUserScore {

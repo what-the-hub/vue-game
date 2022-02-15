@@ -8,8 +8,7 @@
       bordered
       outlined
       :items="scoreList"
-    >
-    </b-table>
+    />
   </div>
 </template>
 
