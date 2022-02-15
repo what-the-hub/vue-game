@@ -162,7 +162,6 @@ export default class Board extends Vue {
     if (newValue.length === 0 && !this.isActive) {
       try {
         const gameData = this.getGameData()
-        console.log(gameData, 'new')
         this.resetScore()
         await this.$store.dispatch(
           `${StoreModuleEnum.userStore}/${EActionUser.UPDATE_DB_SCORE}`, gameData
