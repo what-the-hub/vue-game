@@ -1,6 +1,6 @@
 <template>
   <div class="score-wrapper">
-    {{newScoreList}}
+    <b-table striped hover :items="scoreList"></b-table>
   </div>
 </template>
 
@@ -11,6 +11,7 @@ import { Component } from 'vue-property-decorator'
 import 'vue-class-component/hooks'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionUser } from '@/store/modules/user/typesUser'
+import { IFirestoreScore } from '@/types'
 
 @Component
 export default class ScoreList extends Vue {
@@ -20,8 +21,12 @@ export default class ScoreList extends Vue {
     )
   }
 
-  get newScoreList () {
-    return this.$store.state.userStore.scoreFromDB
+  get scoreList () {
+    const scoreList = this.$store.state.userStore.scoreFromDB
+    console.log(scoreList)
+    return scoreList.map((value: IFirestoreScore) => {
+      return { date: value.date + '&&&', score: value.score }
+    })
   }
 }
 </script>

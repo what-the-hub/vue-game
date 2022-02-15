@@ -2,7 +2,7 @@ import { ActionContext } from 'vuex'
 import { RootStateInterface } from '@/store/types'
 import firebase from 'firebase/compat'
 import User = firebase.User
-import { IFirestoreScore, IFirestoreUser } from '@/types'
+import { IFirestoreScore, IFirestoreUser, IFirestoreUserScore } from '@/types'
 
 export enum EMutationUser {
   // eslint-disable-next-line no-unused-vars
@@ -16,6 +16,8 @@ export enum EActionUser {
   SET_USER = 'SET_USER',
   // eslint-disable-next-line no-unused-vars
   GET_DB_SCORE = 'GET_DB_SCORE',
+  // eslint-disable-next-line no-unused-vars
+  UPDATE_DB_SCORE = 'UPDATE_DB_SCORE',
 }
 
 export enum EGetterUser {
@@ -48,6 +50,9 @@ export interface Actions {
   ): void,
   [EActionUser.GET_DB_SCORE](
     { commit }: AugmentedActionContext, payload: any
+  ): Promise<void>,
+  [EActionUser.UPDATE_DB_SCORE](
+    { commit, dispatch }: AugmentedActionContext, payload: IFirestoreUserScore
   ): Promise<void>,
 }
 

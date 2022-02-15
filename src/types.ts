@@ -17,8 +17,8 @@ export interface IAreasPositions {
 }
 
 export interface IFirestoreUser {
-  uid: string,
-  email: string
+  uid: string | undefined,
+  email: string | null | undefined
 }
 
 export interface IFirestoreScore {

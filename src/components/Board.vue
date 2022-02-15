@@ -45,7 +45,6 @@ import Areas from '@/gameComponents/Areas.vue'
 import { EActionUser, EGetterUser } from '@/store/modules/user/typesUser'
 import 'vue-class-component/hooks'
 import ScoreList from '@/gameComponents/ScoreList.vue'
-import { checkAndUpdateUser } from '@/api/DBFirebaseHelpers'
 
 @Component({
   components: {
@@ -161,13 +160,16 @@ export default class Board extends Vue {
   @Watch('storeArrows')
   async watchArrowsExists (newValue: IArrowData[]) {
     if (newValue.length === 0 && !this.isActive) {
-      const gameData = this.getGameData()
-      console.log(gameData, 'new')
-      this.resetScore()
-      await checkAndUpdateUser(gameData)
-      await this.$store.dispatch(
-        `${StoreModuleEnum.userStore}/${EActionUser.GET_DB_SCORE}`
-      )
+      try {
+        const gameData = this.getGameData()
+        console.log(gameData, 'new')
+        this.resetScore()
+        await this.$store.dispatch(
+          `${StoreModuleEnum.userStore}/${EActionUser.UPDATE_DB_SCORE}`, gameData
+        )
+      } catch (e) {
+        throw new Error(e.message)
+      }
     }
   }
 
