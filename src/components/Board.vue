@@ -36,7 +36,7 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import Arrow from '@/gameComponents/Arrow.vue'
-import { EDirection, IAreasPositions, IFirestoreUserScore } from '@/types'
+import { EDirection, IAreasPositions } from '@/types'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionScore } from '@/store/modules/score/typesScore'
 import { EActionArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
@@ -173,18 +173,6 @@ export default class Board extends Vue {
     await this.$store.dispatch(
       `${StoreModuleEnum.userStore}/${EActionUser.UPDATE_DB_SCORE}`, this.storeScore
     )
-  }
-
-  getGameData (): IFirestoreUserScore {
-    return {
-      userData: this.$store.getters[
-        `${StoreModuleEnum.userStore}/${EGetterUser.GET_USER_DATA}`
-      ],
-      scoreData: {
-        date: Date.now(),
-        score: this.storeScore
-      }
-    }
   }
 
   resetScore (): void {
