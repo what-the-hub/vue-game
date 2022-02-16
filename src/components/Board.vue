@@ -7,27 +7,36 @@
       <div id="score">
         Score: {{ storeScore }}
       </div>
-      <button
-        class="button-base"
-        @click="startGame"
-        :disabled="storeArrows.length !== 0"
-      >
-        start
-      </button>
-      <button
-        class="button-base mt-5"
-        @click="stopGame"
-        :disabled="!isActive"
-      >
-        stop
-      </button>
-      <areas @calculate-positions="setPositions"/>
+      <div class="buttons-wrapper">
+        <button
+          class="button-base"
+          @click="startGame"
+          :disabled="storeArrows.length !== 0"
+        >
+          start
+        </button>
+        <button
+          class="button-base mt-5"
+          @click="stopGame"
+          :disabled="!isActive"
+        >
+          stop
+        </button>
+      </div>
+
+      <areas class="areas" @calculate-positions="setPositions"/>
+      <div class="arrow-icons-wrapper">
+        <b-icon-arrow-up-square-fill></b-icon-arrow-up-square-fill>
+        <b-icon-arrow-down-square-fill></b-icon-arrow-down-square-fill>
+        <b-icon-arrow-right-square-fill></b-icon-arrow-right-square-fill>
+        <b-icon-arrow-left-square-fill></b-icon-arrow-left-square-fill>
+      </div>
       <arrow
         v-for="arrow in storeArrows"
         :key="arrow.id"
       />
     </div>
-    <score-list/>
+    <score-list class="score-list"/>
   </div>
 </template>
 
@@ -45,10 +54,23 @@ import Areas from '@/gameComponents/Areas.vue'
 import { EActionUser, EGetterUser } from '@/store/modules/user/typesUser'
 import 'vue-class-component/hooks'
 import ScoreList from '@/gameComponents/ScoreList.vue'
+import {
+  BIconArrowUpSquareFill,
+  BIconArrowDownSquareFill,
+  BIconArrowLeftSquareFill,
+  BIconArrowRightSquareFill
+} from 'bootstrap-vue'
 
 @Component({
   components: {
-    Arrow, Areas, ScoreList
+    Arrow,
+    Areas,
+    ScoreList,
+    BIconArrowUpSquareFill,
+    BIconArrowDownSquareFill,
+    BIconArrowLeftSquareFill,
+    BIconArrowRightSquareFill
+
   }
 })
 export default class Board extends Vue {
@@ -189,21 +211,52 @@ export default class Board extends Vue {
   margin: 0
 
 #game
-  width: 70%
-  box-sizing: content-box
+  width: 100%
+  box-sizing: border-box
   border: 1px solid black
   height: 100%
+  grid-area: game-area
+  display: grid
+  grid-template-columns: 2fr 8fr 2fr
+  grid-template-rows: 2fr 8fr 1fr
+  grid-template-areas: 'up-left up-middle up-right' 'centre centre centre' 'down down down'
 
   position: relative
   overflow: hidden
 
 .button-base
-  position: absolute
-  top: 0
-  right: 0
 
 .board-wrapper
-  display: flex
-  flex-flow: row nowrap
+  display: grid
+  grid-template-columns: 8fr 4fr
+  width: 100%
+  grid-template-areas: 'game-area score-area'
   height: 500px
+  background-color: antiquewhite
+
+.score-list
+  grid-area: score-area
+  width: 100%
+  box-sizing: border-box
+
+.areas
+  grid-area: centre
+  align-self: end
+
+.buttons-wrapper
+  grid-area: up-right
+
+#score
+  grid-area: up-left
+
+#user-name
+  grid-area: up-left
+
+.arrow-icons-wrapper
+  grid-area: down
+  bottom: 0
+  display: grid
+  grid-template-columns: 3fr 3fr 3fr 3fr
+  justify-items: center
+
 </style>

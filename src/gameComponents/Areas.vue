@@ -59,7 +59,7 @@ export default class Areas extends Vue {
   background: rgb(255, 241, 0)
   height: 100px
   width: 100%
-  position: absolute
+  // position: absolute
   bottom: 40px
   display: flex
   align-items: center
