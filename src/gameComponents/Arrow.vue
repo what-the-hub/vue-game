@@ -1,9 +1,10 @@
 <template>
-  <div
-    :id="arrowData.id"
-    :class="arrowData.direction"
-    class="default-arrow">
-  </div>
+    <p
+      :id="arrowData.id"
+      :class="arrowData.direction"
+      class="default-arrow">
+      <b-icon :icon="iconName"/>
+    </p>
 </template>
 
 <script lang="ts">
@@ -16,9 +17,17 @@ import { EActionArrow, EGetterArrow, IArrowData } from '@/store/modules/arrow/ty
 @Component
 export default class Arrow extends Vue {
   arrowData!: IArrowData
+  iconName!: string
+  iconsMap: {[index: string]: string} = {
+    'left-arrow': 'arrow-left-square',
+    'up-arrow': 'arrow-up-square',
+    'down-arrow': 'arrow-down-square',
+    'right-arrow': 'arrow-right-square'
+  }
 
   created () {
     this.arrowData = this.getLastArrow()
+    this.iconName = this.iconsMap[this.arrowData.direction!]
   }
 
   mounted () {
@@ -43,61 +52,26 @@ export default class Arrow extends Vue {
 </script>
 
 <style scoped lang="sass">
+
 .default-arrow
-  width: 20px
-  height: 20px
-  background-color: rgb(255, 0, 0)
+  font-size: 40px
+  color: brown
   position: absolute
   z-index: 10
   top: 0
   animation: block 5s linear
 
 .left-arrow
-  left: 20px
-
-  &::before
-    content: ''
-    border-top: 10px solid transparent
-    border-bottom: 10px solid transparent
-    border-right: 10px solid blue
-    position: absolute
-    right: 5px
+  left: calc(25% / 2)
 
 .up-arrow
-  left: 200px
-
-  &::before
-    content: ''
-    border-top: 10px solid transparent
-    border-bottom: 10px solid blue
-    border-right: 10px solid transparent
-    border-left: 10px solid transparent
-    position: absolute
-    bottom: 5px
+  left: calc(50% - (25% / 2))
 
 .down-arrow
-  left: 300px
-
-  &::before
-    content: ''
-    border-top: 10px solid blue
-    border-bottom: 10px solid transparent
-    border-right: 10px solid transparent
-    border-left: 10px solid transparent
-    position: absolute
-    top: 5px
+  left: calc(75% - (25% / 2))
 
 .right-arrow
-  left: 400px
-
-  &::before
-    content: ''
-    border-top: 10px solid transparent
-    border-bottom: 10px solid transparent
-    border-right: 10px solid transparent
-    border-left: 10px solid blue
-    position: absolute
-    left: 5px
+  left: calc(100% - (25% / 2))
 
 @keyframes block
   0%

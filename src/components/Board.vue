@@ -4,7 +4,7 @@
       <div id="user-name">
         Username: {{ userEmail }}
       </div>
-ad      <div id="score" style="margin-top: 60px">
+      <div id="score" style="margin-top: 60px">
         Score: {{ storeScore }}
       </div>
       <div class="buttons-wrapper">
@@ -251,8 +251,6 @@ export default class Board extends Vue {
 
   position: relative
   overflow: hidden
-
-.bottom-arrow-icons
 
 .board-wrapper
   display: grid
