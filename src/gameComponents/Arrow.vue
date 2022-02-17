@@ -52,9 +52,11 @@ export default class Arrow extends Vue {
 </script>
 
 <style scoped lang="sass">
+@import 'src/styles/variables'
+@import 'src/styles/functions'
 
 .default-arrow
-  font-size: 40px
+  font-size: $size-icon
   color: brown
   position: absolute
   z-index: 10
@@ -62,16 +64,16 @@ export default class Arrow extends Vue {
   animation: block 5s linear
 
 .left-arrow
-  left: calc(25% / 2)
+  left: calcPosition(25%)
 
 .up-arrow
-  left: calc(50% - (25% / 2))
+  left: calcPosition(50%)
 
 .down-arrow
-  left: calc(75% - (25% / 2))
+  left: calcPosition(75%)
 
 .right-arrow
-  left: calc(100% - (25% / 2))
+  left: calcPosition(100%)
 
 @keyframes block
   0%

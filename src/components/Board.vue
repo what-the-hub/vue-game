@@ -228,15 +228,16 @@ export default class Board extends Vue {
 </script>
 
 <style scoped lang="sass">
+@import 'src/styles/variables'
 *
   padding: 0
   margin: 0
 
 .default-keydown-style
-  color: rgba(124, 252, 0, 0.64)
+  color: $cl-df-key-pressed
 
 .in-area-keydown-style
-  color: rgb(255, 0, 0)
+  color: $cl-ex-key-pressed
 
 #game
   width: 100%
@@ -248,7 +249,6 @@ export default class Board extends Vue {
   grid-template-columns: 2fr 8fr 2fr
   grid-template-rows: 2fr 8fr 1fr
   grid-template-areas: 'up-left up-middle up-right' 'centre centre centre' 'down down down'
-
   position: relative
   overflow: hidden
 
@@ -257,13 +257,14 @@ export default class Board extends Vue {
   grid-template-columns: 8fr 4fr
   width: 100%
   grid-template-areas: 'game-area score-area'
-  height: 500px
+  height: $size-board
 
 .score-list
-  max-height: 500px
+  max-height: $size-board
   grid-area: score-area
   width: 100%
   box-sizing: border-box
+  z-index: 150
 
 .areas
   grid-area: centre
@@ -279,13 +280,15 @@ export default class Board extends Vue {
   grid-area: up-left
 
 .arrow-icons-wrapper
-  color: rgba(124, 252, 0, 0.45)
+  color: $cl-df-bottom-icons
   grid-area: down
   bottom: 0
   display: grid
   grid-template-columns: 3fr 3fr 3fr 3fr
   justify-items: center
+  z-index: 100
+  background: linear-gradient(0deg, $cl-white 70%, $cl-transparent 90%)
 
   p
-    font-size: 40px
+    font-size: $size-icon
 </style>
