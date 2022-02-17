@@ -57,11 +57,14 @@ export default class Arrow extends Vue {
 
 .default-arrow
   font-size: $size-icon
-  color: brown
+  color: $cl-dropping-icons
   position: absolute
   z-index: 10
   top: 0
   animation: block 5s linear
+
+svg
+  animation: dropping-animation 6s linear
 
 .left-arrow
   left: calcPosition(25%)
@@ -74,6 +77,19 @@ export default class Arrow extends Vue {
 
 .right-arrow
   left: calcPosition(100%)
+
+@keyframes dropping-animation
+  0%
+    filter: drop-shadow(0px 0px 1px rgba(0, 252, 80, 0.4))
+
+  70%
+    filter: drop-shadow(0px -100px 20px rgba(0, 252, 80, 0.3))
+
+  90%
+    filter: drop-shadow(0px -100px 20px rgba(124, 252, 0, 0))
+
+  100%
+    filter: drop-shadow(0px -100px 50px rgba(0, 0, 0, 0))
 
 @keyframes block
   0%
