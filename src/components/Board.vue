@@ -4,7 +4,7 @@
       <div id="user-name">
         Username: {{ userEmail }}
       </div>
-      <div id="score">
+ad      <div id="score" style="margin-top: 60px">
         Score: {{ storeScore }}
       </div>
       <div class="buttons-wrapper">
@@ -26,10 +26,10 @@
 
       <areas class="areas" @calculate-positions="setPositions"/>
       <div class="arrow-icons-wrapper">
-        <b-icon-arrow-up-square-fill></b-icon-arrow-up-square-fill>
-        <b-icon-arrow-down-square-fill></b-icon-arrow-down-square-fill>
-        <b-icon-arrow-right-square-fill></b-icon-arrow-right-square-fill>
-        <b-icon-arrow-left-square-fill></b-icon-arrow-left-square-fill>
+        <p ref="bottom-left-arrow"><b-icon-arrow-left-square-fill/></p>
+        <p ref="bottom-up-arrow"><b-icon-arrow-up-square-fill/></p>
+        <p ref="bottom-down-arrow"><b-icon-arrow-down-square-fill/></p>
+        <p ref="bottom-right-arrow"><b-icon-arrow-right-square-fill/></p>
       </div>
       <arrow
         v-for="arrow in storeArrows"
@@ -77,6 +77,7 @@ export default class Board extends Vue {
   isActive: boolean = false // flag for start and finish game
   safeLoop: number = 0
   positions!: IAreasPositions
+  animationStyle: string = ''
 
   get storeArrows (): IArrowData[] {
     return this.$store.state.arrowStore.arrowsData
@@ -136,11 +137,14 @@ export default class Board extends Vue {
       e.direction === keyMap[key]
     )
     if (firstFondArrow) {
-      this.checkArrowPosition(firstFondArrow.id)
+      this.checkArrowPosition(firstFondArrow.id, keyMap[key])
+    }
+    if (keyMap[key]) {
+      this.setAnimationToBottomArrows(keyMap[key])
     }
   }
 
-  checkArrowPosition (id: number): void {
+  checkArrowPosition (id: number, key: string): void {
     const arrowEl: HTMLElement | null = document.getElementById(id.toString())
     if (arrowEl) {
       const itemHeight: number = arrowEl.clientHeight
@@ -154,12 +158,30 @@ export default class Board extends Vue {
       if (excellentArea) {
         this.setScore(2)
         this.setStyle('excellent')
+        this.setAnimationToBottomArrows(key, true)
       } else if (goodArea) {
         this.setScore(1)
         this.setStyle('good')
+        this.setAnimationToBottomArrows(key, true)
       }
     } else {
       console.log('Something wrong, please reload page')
+    }
+  }
+
+  setAnimationToBottomArrows (direction: string, isInArea?: boolean) {
+    const elRef: string = 'bottom-' + direction
+    const bottomArrowEl = this.$refs[elRef] as HTMLElement
+    if (isInArea) {
+      bottomArrowEl.classList.add('in-area-keydown-style')
+      setTimeout(() => {
+        bottomArrowEl.classList.remove('in-area-keydown-style')
+      }, 100)
+    } else {
+      bottomArrowEl.classList.add('default-keydown-style')
+      setTimeout(() => {
+        bottomArrowEl.classList.remove('default-keydown-style')
+      }, 100)
     }
   }
 
@@ -210,6 +232,12 @@ export default class Board extends Vue {
   padding: 0
   margin: 0
 
+.default-keydown-style
+  color: rgba(124, 252, 0, 0.64)
+
+.in-area-keydown-style
+  color: rgb(255, 0, 0)
+
 #game
   width: 100%
   box-sizing: border-box
@@ -224,7 +252,7 @@ export default class Board extends Vue {
   position: relative
   overflow: hidden
 
-.button-base
+.bottom-arrow-icons
 
 .board-wrapper
   display: grid
@@ -232,9 +260,9 @@ export default class Board extends Vue {
   width: 100%
   grid-template-areas: 'game-area score-area'
   height: 500px
-  background-color: antiquewhite
 
 .score-list
+  max-height: 500px
   grid-area: score-area
   width: 100%
   box-sizing: border-box
@@ -253,10 +281,13 @@ export default class Board extends Vue {
   grid-area: up-left
 
 .arrow-icons-wrapper
+  color: rgba(124, 252, 0, 0.45)
   grid-area: down
   bottom: 0
   display: grid
   grid-template-columns: 3fr 3fr 3fr 3fr
   justify-items: center
 
+  p
+    font-size: 40px
 </style>
