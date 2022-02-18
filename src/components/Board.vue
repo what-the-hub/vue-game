@@ -103,6 +103,7 @@ export default class Board extends Vue {
 
   startGame (): void {
     console.log('the game is on')
+    this.resetScore()
     this.isActive = true
     this.runRender()
     window.addEventListener('keydown', this.onKeyDown)
@@ -210,7 +211,6 @@ export default class Board extends Vue {
     if (newValue.length === 0 && !this.isActive) {
       try {
         await this.storeUpdateDB()
-        this.resetScore()
       } catch (e) {
         throw new Error(e.message)
       }
@@ -233,6 +233,8 @@ export default class Board extends Vue {
 
 <style scoped lang="sass">
 @import 'src/styles/variables'
+@import 'src/styles/functions'
+
 *
   padding: 0
   margin: 0
