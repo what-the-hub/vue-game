@@ -19,7 +19,7 @@
           start
         </button>
         <button
-          class="btn btn-outline-success"
+          class="btn btn-success"
           @click="stopGame"
           v-show="isActive"
           :disabled="!isActive"
@@ -244,7 +244,6 @@ export default class Board extends Vue {
   color: $cl-ex-key-pressed
 
 #game
-  margin-left: 10px
   width: 100%
   box-sizing: border-box
   border: 2px solid $cl-borders
@@ -259,11 +258,12 @@ export default class Board extends Vue {
   overflow: hidden
 
 .board-wrapper
+  padding: 0 10px
   display: grid
   grid-template-columns: 8fr 4fr
   width: 100%
   grid-template-areas: 'game-area score-area'
-  grid-column-gap: 20px
+  grid-column-gap: 10px
   height: $size-board
 
 .score-list

@@ -49,7 +49,7 @@
       </div>
 
       <button type="submit"
-              class="btn btn-primary"
+              class="btn btn-success"
               @click.prevent="onSubmit"
               :disabled="$v.$error || !$v.$dirty"
       >
