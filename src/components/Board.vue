@@ -1,23 +1,27 @@
 <template>
   <div class="board-wrapper">
-    <div id="game" ref="game">
-      <div id="user-name">
-        Username: {{ userEmail }}
-      </div>
-      <div id="score" style="margin-top: 60px">
-        Score: {{ storeScore }}
+    <div id="game">
+      <div class="info-wrapper">
+        <div>
+          {{ userEmail }}
+        </div>
+        <div>
+          Score: {{ storeScore }}
+        </div>
       </div>
       <div class="buttons-wrapper">
         <button
-          class="button-base"
+          class="btn btn-success"
           @click="startGame"
+          v-show="!isActive"
           :disabled="storeArrows.length !== 0"
         >
           start
         </button>
         <button
-          class="button-base mt-5"
+          class="btn btn-outline-success"
           @click="stopGame"
+          v-show="isActive"
           :disabled="!isActive"
         >
           stop
@@ -240,10 +244,12 @@ export default class Board extends Vue {
   color: $cl-ex-key-pressed
 
 #game
+  margin-left: 10px
   width: 100%
   box-sizing: border-box
-  border: 1px solid black
-  height: 100%
+  border: 2px solid rgb(25, 135, 84)
+  border-radius: 10px
+  height: $size-board
   grid-area: game-area
   display: grid
   grid-template-columns: 2fr 8fr 2fr
@@ -257,6 +263,7 @@ export default class Board extends Vue {
   grid-template-columns: 8fr 4fr
   width: 100%
   grid-template-areas: 'game-area score-area'
+  grid-column-gap: 20px
   height: $size-board
 
 .score-list
@@ -272,12 +279,13 @@ export default class Board extends Vue {
 
 .buttons-wrapper
   grid-area: up-right
+  margin: 20px
+  button
+    min-width: 70px
 
-#score
+.info-wrapper
   grid-area: up-left
-
-#user-name
-  grid-area: up-left
+  margin: 20px
 
 .arrow-icons-wrapper
   color: $cl-df-bottom-icons
