@@ -282,6 +282,7 @@ export default class Board extends Vue {
 .buttons-wrapper
   grid-area: up-right
   margin: 20px
+  z-index: 300
   button
     min-width: 70px
 

@@ -12,6 +12,7 @@ import Component from 'vue-class-component'
 import { IAreasPositions } from '@/types'
 import { Emit, Watch } from 'vue-property-decorator'
 import { IStateScore } from '@/store/modules/score/typesScore'
+import { IArrowData } from '@/store/modules/arrow/typesArrow'
 
 @Component
 export default class Areas extends Vue {
@@ -23,6 +24,10 @@ export default class Areas extends Vue {
   mapStyles: {[index: string]: string} = {
     good: 'good-animation',
     excellent: 'excellent-animation'
+  }
+
+  get storeArrows (): IArrowData[] {
+    return this.$store.state.arrowStore.arrowsData
   }
 
   mounted (): void {
@@ -44,19 +49,21 @@ export default class Areas extends Vue {
   @Watch('$store.state.scoreStore', { immediate: true, deep: true })
   onLastStyleChanged (val: IStateScore) {
     const style: string = val.lastStyle
-    if (this.mapStyles[style]) {
+    if (this.mapStyles[style] && this.storeArrows.length !== 0) {
       this.animationStyle[style] = this.mapStyles[style]
       setTimeout(() => {
         this.animationStyle[style] = ''
-      }, 300)
+      }, 200)
     }
   }
 }
 </script>
 
 <style scoped lang="sass">
+@import 'src/styles/variables'
+
 #good
-  background: rgb(255, 241, 0)
+  background: $cl-good-area
   height: 100px
   width: 100%
   // position: absolute
@@ -68,13 +75,11 @@ export default class Areas extends Vue {
 #excellent
   position: absolute
   width: 100%
-  background: rgb(126, 255, 0)
+  background: $cl-ex-area
   height: 40px
 
 .good-animation
-  border-top: 2px solid rgb(245, 170, 73)
-  border-bottom: 2px solid rgb(245, 170, 73)
-  box-shadow: 0 0 43px 16px rgba(164, 138, 32, 0.33)
+  box-shadow: 0 0 43px 16px rgba(160, 164, 32, 0.33)
 
 .excellent-animation
   border-top: 2px solid rgb(11, 168, 0)
