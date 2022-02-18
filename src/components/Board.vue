@@ -247,7 +247,7 @@ export default class Board extends Vue {
   margin-left: 10px
   width: 100%
   box-sizing: border-box
-  border: 2px solid rgb(25, 135, 84)
+  border: 2px solid $cl-borders
   border-radius: 10px
   height: $size-board
   grid-area: game-area
@@ -272,6 +272,8 @@ export default class Board extends Vue {
   width: 100%
   box-sizing: border-box
   z-index: 150
+  border: 2px solid $cl-borders
+  border-radius: 10px
 
 .areas
   grid-area: centre
