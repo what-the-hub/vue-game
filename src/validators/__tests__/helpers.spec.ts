@@ -7,10 +7,6 @@ describe('test validatePassword function', () => {
   it('should return FALSE for validatePassword("Пароль123")', function () {
     expect(validatePassword('Пароль123')).toBe(false)
   })
-  it('should return FALSE for validatePassword(12 as number)', function () {
-    // @ts-ignore
-    expect(validatePassword(12)).toBe(false)
-  })
   it('should return FALSE for validatePassword("---------")', function () {
     expect(validatePassword('---------')).toBe(false)
   })
