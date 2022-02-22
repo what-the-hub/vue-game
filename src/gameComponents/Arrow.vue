@@ -80,7 +80,7 @@ svg
 
 @keyframes dropping-animation
   0%
-    filter: drop-shadow(0px 0px 1px rgba(0, 252, 80, 0.4))
+    filter: drop-shadow(0px 0px 0px rgba(0, 252, 80, 0.4))
   70%
     filter: drop-shadow(0px -100px 20px rgba(0, 252, 80, 0.3))
   90%
