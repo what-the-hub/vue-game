@@ -9,6 +9,20 @@ export enum EDirection {
   ArrowRight = 'right-arrow'
 }
 
+export enum EBottomArrowsStyles {
+  'arrow-left-square',
+  'arrow-up-square',
+  'arrow-down-square',
+  'arrow-right-square'
+}
+
+export interface IIconsMap {
+  [EDirection.ArrowLeft]: EBottomArrowsStyles,
+  [EDirection.ArrowUp]: EBottomArrowsStyles,
+  [EDirection.ArrowDown]: EBottomArrowsStyles,
+  [EDirection.ArrowRight]: EBottomArrowsStyles,
+}
+
 export interface IAreasPositions {
   topGoodArea: number,
   bottomGoodArea: number,
@@ -29,9 +43,4 @@ export interface IFirestoreScore {
 export interface IFirestoreUserScore {
   userData: IFirestoreUser,
   scoreData: IFirestoreScore
-}
-
-export interface ICurrentUserDB {
-  scoreList: IFirestoreScore[] | [],
-  email: string
 }

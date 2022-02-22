@@ -149,7 +149,7 @@ export default class Board extends Vue {
     }
   }
 
-  checkArrowPosition (id: number, key: string): void {
+  checkArrowPosition (id: number, key: EDirection): void {
     const arrowEl: HTMLElement | null = document.getElementById(id.toString())
     if (arrowEl) {
       const itemHeight: number = arrowEl.clientHeight
@@ -174,7 +174,7 @@ export default class Board extends Vue {
     }
   }
 
-  setAnimationToBottomArrows (direction: string, isInArea?: boolean) {
+  setAnimationToBottomArrows (direction: EDirection, isInArea?: boolean) {
     const elRef: string = 'bottom-' + direction
     const bottomArrowEl = this.$refs[elRef] as HTMLElement
     if (isInArea) {

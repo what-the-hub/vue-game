@@ -13,16 +13,17 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionArrow, EGetterArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
+import { EBottomArrowsStyles, EDirection, IIconsMap } from '@/types'
 
 @Component
 export default class Arrow extends Vue {
   arrowData!: IArrowData
-  iconName!: string
-  iconsMap: {[index: string]: string} = {
-    'left-arrow': 'arrow-left-square',
-    'up-arrow': 'arrow-up-square',
-    'down-arrow': 'arrow-down-square',
-    'right-arrow': 'arrow-right-square'
+  iconName!: EBottomArrowsStyles
+  iconsMap: IIconsMap = {
+    [EDirection.ArrowLeft]: 'arrow-left-square',
+    [EDirection.ArrowUp]: 'arrow-up-square',
+    [EDirection.ArrowDown]: 'arrow-down-square',
+    [EDirection.ArrowRight]: 'arrow-right-square'
   }
 
   created () {
