@@ -8,6 +8,7 @@
       bordered
       outlined
       :items="scoreList"
+      thead-class="cells"
     />
   </div>
 </template>
@@ -48,20 +49,38 @@ export default class ScoreList extends Vue {
 </script>
 
 <style scoped lang="sass">
+@import 'src/styles/variables'
 *
   padding: 0
   margin: 0
 
 .score-wrapper
-  position: relative
-  width: 30%
-  height: 100%
-  box-sizing: content-box
-  border: 1px solid black
+  max-height: $size-board
+  grid-area: score-area
+  width: 100%
+  box-sizing: border-box
+  z-index: 450
+  border: 2px solid $cl-borders
+  border-radius: 10px
 
 .table
   text-align: center
   position: relative
-  height: 1000%
-  overflow-y: scroll
+  height: 100%
+  border-radius: 10px
+  overflow-y: auto
+  background-color: rgba(226, 255, 209, 0.91)
+  :not(:first-child)
+    border: none
+
+  &::-webkit-scrollbar
+    display: none
+
+::v-deep tbody
+  tr
+    border: none
+  td
+    border-right: 1px solid $cl-default-button
+    border-left: 0 solid $cl-default-button
+
 </style>

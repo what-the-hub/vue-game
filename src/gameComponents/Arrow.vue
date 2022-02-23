@@ -1,9 +1,10 @@
 <template>
-  <div
-    :id="arrowData.id"
-    :class="arrowData.direction"
-    class="default-arrow">
-  </div>
+    <p
+      :id="arrowData.id"
+      :class="arrowData.direction"
+      class="default-arrow">
+      <b-icon :icon="iconName"/>
+    </p>
 </template>
 
 <script lang="ts">
@@ -12,13 +13,22 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionArrow, EGetterArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
+import { EDirection } from '@/types'
 
 @Component
 export default class Arrow extends Vue {
   arrowData!: IArrowData
+  iconName!: string
+  iconsMap: {[index in EDirection ]: string} = {
+    [EDirection.ArrowLeft]: 'arrow-left-square',
+    [EDirection.ArrowUp]: 'arrow-up-square',
+    [EDirection.ArrowDown]: 'arrow-down-square',
+    [EDirection.ArrowRight]: 'arrow-right-square'
+  }
 
   created () {
-    this.arrowData = this.getLastArrow()
+    this.arrowData = this.getLastArrowFromStore()
+    this.iconName = this.iconsMap[this.arrowData.direction!]
   }
 
   mounted () {
@@ -28,7 +38,7 @@ export default class Arrow extends Vue {
     })
   }
 
-  getLastArrow (): IArrowData {
+  getLastArrowFromStore (): IArrowData {
     return this.$store.getters[
       `${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`
     ] // for last added item in array
@@ -43,61 +53,41 @@ export default class Arrow extends Vue {
 </script>
 
 <style scoped lang="sass">
+@import 'src/styles/variables'
+@import 'src/styles/functions'
+
 .default-arrow
-  width: 20px
-  height: 20px
-  background-color: rgb(255, 0, 0)
+  font-size: $size-icon
+  color: $cl-dropping-icons
   position: absolute
   z-index: 10
   top: 0
   animation: block 5s linear
 
-.left-arrow
-  left: 20px
+svg
+  animation: dropping-animation 6s linear
 
-  &::before
-    content: ''
-    border-top: 10px solid transparent
-    border-bottom: 10px solid transparent
-    border-right: 10px solid blue
-    position: absolute
-    right: 5px
+.left-arrow
+  left: calcPosition(25%)
 
 .up-arrow
-  left: 200px
-
-  &::before
-    content: ''
-    border-top: 10px solid transparent
-    border-bottom: 10px solid blue
-    border-right: 10px solid transparent
-    border-left: 10px solid transparent
-    position: absolute
-    bottom: 5px
+  left: calcPosition(50%)
 
 .down-arrow
-  left: 300px
-
-  &::before
-    content: ''
-    border-top: 10px solid blue
-    border-bottom: 10px solid transparent
-    border-right: 10px solid transparent
-    border-left: 10px solid transparent
-    position: absolute
-    top: 5px
+  left: calcPosition(75%)
 
 .right-arrow
-  left: 400px
+  left: calcPosition(100%)
 
-  &::before
-    content: ''
-    border-top: 10px solid transparent
-    border-bottom: 10px solid transparent
-    border-right: 10px solid transparent
-    border-left: 10px solid blue
-    position: absolute
-    left: 5px
+@keyframes dropping-animation
+  0%
+    filter: drop-shadow(0px 0px 1px rgba(0, 252, 80, 0.4))
+  70%
+    filter: drop-shadow(0px -100px 20px rgba(0, 252, 80, 0.3))
+  90%
+    filter: drop-shadow(0px -100px 20px $cl-transparent)
+  100%
+    filter: drop-shadow(0px -10px 50px $cl-transparent)
 
 @keyframes block
   0%

@@ -9,7 +9,6 @@
                aria-describedby="emailHelp"
                v-model="email"
                @blur="$v.email.$touch">
-
         <div v-if="$v.email.$error" class="error-message">
           <p
             v-if="!$v.email.required"
@@ -51,7 +50,7 @@
       <div class="buttons-wrapper">
         <router-link class="action-href" to="/sign-up">Register</router-link>
         <button type="submit"
-                class="btn btn-primary"
+                class="btn btn-success"
                 @click.prevent="onLogin"
                 :disabled="$v.$error || !$v.$dirty"
         >
@@ -99,6 +98,7 @@ export default class Auth extends Vue {
 </script>
 
 <style scoped lang="sass">
+@import 'src/styles/variables'
 .wrapper
   width: 500px
   margin: 0 auto
@@ -119,4 +119,7 @@ label
   .action-href
     align-self: flex-end
     text-decoration: none
+    color: $cl-borders
+    &:hover
+     color: $cl-default-button
 </style>

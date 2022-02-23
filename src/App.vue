@@ -10,14 +10,14 @@
         <button
           v-if="this.$store.state.userStore.user"
           @click="signOut"
-          class="btn btn-primary btn-sm"
+          class="btn btn-success btn-sm"
         >
           Log Out
         </button>
         <button
           v-if="!this.$store.state.userStore.user"
           @click="redirectRoute"
-          class="btn btn-primary btn-sm"
+          class="btn btn-success btn-sm"
         >
           Log In
         </button>

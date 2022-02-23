@@ -1,0 +1,5 @@
+@import 'variables'
+
+@function calcPosition($part)
+  $result: calc(#{$part} - (25% / 2) - (#{$size-icon} / 2))
+  @return $result
