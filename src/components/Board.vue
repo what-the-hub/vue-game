@@ -40,7 +40,7 @@
         :key="arrow.id"
       />
     </div>
-    <score-list class="score-list"/>
+    <score-list/>
   </div>
 </template>
 
@@ -149,7 +149,7 @@ export default class Board extends Vue {
     }
   }
 
-  checkArrowPosition (id: number, key: string): void {
+  checkArrowPosition (id: number, key: EDirection): void {
     const arrowEl: HTMLElement | null = document.getElementById(id.toString())
     if (arrowEl) {
       const itemHeight: number = arrowEl.clientHeight
@@ -174,7 +174,7 @@ export default class Board extends Vue {
     }
   }
 
-  setAnimationToBottomArrows (direction: string, isInArea?: boolean) {
+  setAnimationToBottomArrows (direction: EDirection, isInArea?: boolean) {
     const elRef: string = 'bottom-' + direction
     const bottomArrowEl = this.$refs[elRef] as HTMLElement
     if (isInArea) {
@@ -267,15 +267,6 @@ export default class Board extends Vue {
   grid-template-areas: 'game-area score-area'
   grid-column-gap: 10px
   height: $size-board
-
-.score-list
-  max-height: $size-board
-  grid-area: score-area
-  width: 100%
-  box-sizing: border-box
-  z-index: 150
-  border: 2px solid $cl-borders
-  border-radius: 10px
 
 .areas
   grid-area: centre

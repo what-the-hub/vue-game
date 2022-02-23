@@ -55,17 +55,19 @@ export default class ScoreList extends Vue {
   margin: 0
 
 .score-wrapper
-  position: relative
-  width: 30%
-  height: 100%
-  box-sizing: content-box
-  border: 1px solid black
-  overflow: hidden
+  max-height: $size-board
+  grid-area: score-area
+  width: 100%
+  box-sizing: border-box
+  z-index: 450
+  border: 2px solid $cl-borders
+  border-radius: 10px
 
 .table
   text-align: center
   position: relative
   height: 100%
+  border-radius: 10px
   overflow-y: auto
   background-color: rgba(226, 255, 209, 0.91)
   :not(:first-child)

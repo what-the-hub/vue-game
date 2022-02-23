@@ -13,20 +13,21 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { StoreModuleEnum } from '@/store/types'
 import { EActionArrow, EGetterArrow, IArrowData } from '@/store/modules/arrow/typesArrow'
+import { EDirection } from '@/types'
 
 @Component
 export default class Arrow extends Vue {
   arrowData!: IArrowData
   iconName!: string
-  iconsMap: {[index: string]: string} = {
-    'left-arrow': 'arrow-left-square',
-    'up-arrow': 'arrow-up-square',
-    'down-arrow': 'arrow-down-square',
-    'right-arrow': 'arrow-right-square'
+  iconsMap: {[index in EDirection ]: string} = {
+    [EDirection.ArrowLeft]: 'arrow-left-square',
+    [EDirection.ArrowUp]: 'arrow-up-square',
+    [EDirection.ArrowDown]: 'arrow-down-square',
+    [EDirection.ArrowRight]: 'arrow-right-square'
   }
 
   created () {
-    this.arrowData = this.getLastArrow()
+    this.arrowData = this.getLastArrowFromStore()
     this.iconName = this.iconsMap[this.arrowData.direction!]
   }
 
@@ -37,7 +38,7 @@ export default class Arrow extends Vue {
     })
   }
 
-  getLastArrow (): IArrowData {
+  getLastArrowFromStore (): IArrowData {
     return this.$store.getters[
       `${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`
     ] // for last added item in array
