@@ -1,11 +1,13 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
-import Arrow from '@/gameComponents/Arrow.vue'
+import Arrow from '../../gameComponents/Arrow'
 import { arrowStore } from '@/store/modules/arrow/arrow'
-import {Actions, EActionArrow, IStateArrow} from "@/store/modules/arrow/typesArrow";
-import {RootStateInterface} from "@/store/types";
+import { IStateArrow } from '@/store/modules/arrow/typesArrow'
+import { getDirection } from '@/helpers/getDirectionHelper'
 
 const localVue = createLocalVue()
+
+// jest.mock()
 
 localVue.use(Vuex)
 
@@ -13,12 +15,16 @@ describe('Arrow.vue', () => {
   let state: IStateArrow
   let actions: any
   let store: any
+  const arrowData = {
+    id: Date.now(),
+    direction: getDirection()
+  }
   beforeEach(() => {
     state = {
-      arrowsData: []
+      arrowsData: [arrowData]
     }
 
-    const actions = {
+    actions = {
       getLastArrow: jest.fn()
     }
 
@@ -34,17 +40,10 @@ describe('Arrow.vue', () => {
     })
   })
 
-  it('calls store action "moduleActionClick" when button is clicked', () => {
-    const wrapper = shallowMount(Arrow, { store, localVue })
-    const button = wrapper.find('button')
-    button.trigger('click')
-    expect(actions.getLastArrow).toHaveBeenCalled()
-  })
+  const wrapper = shallowMount(Arrow, { store, localVue })
 
-  it('renders "state.clicks" in first p tag', () => {
-    const wrapper = shallowMount(MyComponent, { store, localVue })
-    const p = wrapper.find('p')
-    expect(p.text()).toBe(state.clicks.toString())
+  it('check =p= exists', () => {
+    expect(wrapper.contains('p')).toBe(true)
   })
 })
 
