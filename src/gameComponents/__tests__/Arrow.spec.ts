@@ -1,20 +1,22 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
-import Arrow from '../../gameComponents/Arrow'
+import Arrow from '@/gameComponents/Arrow.vue'
 import { arrowStore } from '@/store/modules/arrow/arrow'
-import { IStateArrow } from '@/store/modules/arrow/typesArrow'
+import { EGetterArrow, IStateArrow } from '@/store/modules/arrow/typesArrow'
 import { getDirection } from '@/helpers/getDirectionHelper'
+import { getters } from '@/store/modules/arrow/getters'
 
 const localVue = createLocalVue()
-
-// jest.mock()
 
 localVue.use(Vuex)
 
 describe('Arrow.vue', () => {
   let state: IStateArrow
-  let actions: any
+  let getters: any
   let store: any
+  const methods = {
+    getLastArrow: jest.fn()
+  }
   const arrowData = {
     id: Date.now(),
     direction: getDirection()
@@ -23,24 +25,29 @@ describe('Arrow.vue', () => {
     state = {
       arrowsData: [arrowData]
     }
+    const arrowsDataMock = jest.fn()
+    arrowsDataMock.mockReturnValue(state.arrowsData)
 
-    actions = {
-      getLastArrow: jest.fn()
+    getters = {
+      getLastArrow: arrowsDataMock
+
     }
 
     store = new Vuex.Store({
       modules: {
         arrowStore: {
           state,
-          actions,
-          getters: arrowStore.getters,
+          getters,
           namespaced: true
         }
       }
     })
   })
 
-  const wrapper = shallowMount(Arrow, { store, localVue })
+  const wrapper = shallowMount(Arrow, { store, localVue, methods })
+  it('should ', () => {
+    expect(methods.getLastArrow).toHaveBeenCalled()
+  })
 
   it('check =p= exists', () => {
     expect(wrapper.contains('p')).toBe(true)
