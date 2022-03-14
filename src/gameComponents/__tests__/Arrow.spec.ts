@@ -1,10 +1,9 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import Arrow from '@/gameComponents/Arrow.vue'
-import { arrowStore } from '@/store/modules/arrow/arrow'
-import { EGetterArrow, IStateArrow } from '@/store/modules/arrow/typesArrow'
+import {EGetterArrow, IStateArrow} from '@/store/modules/arrow/typesArrow'
 import { getDirection } from '@/helpers/getDirectionHelper'
-import { getters } from '@/store/modules/arrow/getters'
+import {StoreModuleEnum} from "@/store/types";
 
 const localVue = createLocalVue()
 
@@ -12,11 +11,13 @@ localVue.use(Vuex)
 
 describe('Arrow.vue', () => {
   let state: IStateArrow
-  let getters: any
-  let store: any
-  const methods = {
-    getLastArrow: jest.fn()
+  const getters: any = {
+
   }
+  const actions: any = {
+    deleteLastArrow: jest.fn()
+  }
+  let store: any
   const arrowData = {
     id: Date.now(),
     direction: getDirection()
@@ -25,43 +26,21 @@ describe('Arrow.vue', () => {
     state = {
       arrowsData: [arrowData]
     }
-    const arrowsDataMock = jest.fn()
-    arrowsDataMock.mockReturnValue(state.arrowsData)
-
-    getters = {
-      getLastArrow: arrowsDataMock
-
-    }
-
     store = new Vuex.Store({
       modules: {
         arrowStore: {
+          namespaced: true,
           state,
           getters,
-          namespaced: true
+          actions
         }
       }
     })
   })
 
-  const wrapper = shallowMount(Arrow, { store, localVue, methods })
-  it('should ', () => {
-    expect(methods.getLastArrow).toHaveBeenCalled()
-  })
+  const wrapper = shallowMount(Arrow, { store, localVue })
 
   it('check =p= exists', () => {
-    expect(wrapper.contains('p')).toBe(true)
+    expect(wrapper.find('p').exists()).toBe(true)
   })
 })
-
-/* jest.mock('@/store/modules/arrow/arrow', () => ({
-  service: {
-    // jest.fn creates mock function which replaces actually implementation of function.
-    // It captures all calls to function with arguments and more.
-    createProduct: jest.fn(() => async (p: Product) => {
-    }),
-    getEmpty: () => {
-      return {};
-    },
-  },
-})) */
