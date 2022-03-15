@@ -1,46 +1,56 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils'
-import Vuex from 'vuex'
+import { shallowMount, Wrapper } from '@vue/test-utils'
+
 import Arrow from '@/gameComponents/Arrow.vue'
-import {EGetterArrow, IStateArrow} from '@/store/modules/arrow/typesArrow'
-import { getDirection } from '@/helpers/getDirectionHelper'
-import {StoreModuleEnum} from "@/store/types";
+import { EGetterArrow } from '@/store/modules/arrow/typesArrow'
 
-const localVue = createLocalVue()
+import { StoreModuleEnum } from '@/store/types'
+import { BIcon } from 'bootstrap-vue'
+import { EDirection } from '@/types'
 
-localVue.use(Vuex)
+// eslint-disable-next-line camelcase
+const baseMocks = {
+  $store: {
+    getters: {
+      [`${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`]: { id: 1, direction: EDirection.ArrowDown }
+    },
+    dispatch: () => jest.fn()
+  }
+}
 
 describe('Arrow.vue', () => {
-  let state: IStateArrow
-  const getters: any = {
-
-  }
-  const actions: any = {
-    deleteLastArrow: jest.fn()
-  }
-  let store: any
-  const arrowData = {
-    id: Date.now(),
-    direction: getDirection()
-  }
+  let wrapper: Wrapper<Arrow>
+  let vm: Arrow|any
   beforeEach(() => {
-    state = {
-      arrowsData: [arrowData]
-    }
-    store = new Vuex.Store({
-      modules: {
-        arrowStore: {
-          namespaced: true,
-          state,
-          getters,
-          actions
-        }
+    wrapper = shallowMount(Arrow, {
+      mocks: baseMocks,
+      components: {
+        'b-icon': BIcon
       }
     })
+    vm = wrapper.vm
   })
-
-  const wrapper = shallowMount(Arrow, { store, localVue })
 
   it('check =p= exists', () => {
     expect(wrapper.find('p').exists()).toBe(true)
+  })
+
+  it('should set arrowData from the store', () => {
+    expect(vm.arrowData.direction).toEqual(EDirection.ArrowDown)
+    expect(vm.arrowData.id).toEqual(1)
+  })
+
+  it('should set icon Name', () => {
+    expect(vm.iconName).toEqual('arrow-down-square')
+  })
+
+  it('should call dispatch on deleteLastArrow', () => {
+    vm.deleteLastArrow()
+    setTimeout(() => {
+      expect(vm.$store.dispatch).toHaveBeenCalled()
+    }, 0)
+  })
+
+  it('should return last arrow data', () => {
+    expect(vm.getLastArrow()).toEqual({ id: 1, direction: EDirection.ArrowDown })
   })
 })
