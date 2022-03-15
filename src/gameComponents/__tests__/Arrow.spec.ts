@@ -20,12 +20,15 @@ const baseMocks = {
 describe('Arrow.vue', () => {
   let wrapper: Wrapper<Arrow>
   let vm: Arrow|any
+  const deleteLastArrow = jest.fn()
+
   beforeEach(() => {
     wrapper = shallowMount(Arrow, {
       mocks: baseMocks,
       components: {
         'b-icon': BIcon
-      }
+      },
+      methods: { deleteLastArrow }
     })
     vm = wrapper.vm
   })
@@ -52,5 +55,10 @@ describe('Arrow.vue', () => {
 
   it('should return last arrow data', () => {
     expect(vm.getLastArrow()).toEqual({ id: 1, direction: EDirection.ArrowDown })
+  })
+
+  it('should  call deleteLastArrow after animationend event', () => {
+    wrapper.trigger('animationend')
+    expect(deleteLastArrow).toHaveBeenCalled()
   })
 })
