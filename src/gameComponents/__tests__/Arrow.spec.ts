@@ -28,7 +28,7 @@ describe('Arrow.vue', () => {
     vm = wrapper.vm
   })
 
-  it('check =p= exists', () => {
+  it('should =p= exists', () => {
     expect(wrapper.find('p').exists()).toBe(true)
   })
 
@@ -68,7 +68,7 @@ describe('Arrow.vue', () => {
     expect(vm.$destroy).toHaveBeenCalled()
   })
 
-  it('=p= should have necessary class', () => {
+  it('should =p= have necessary class', () => {
     expect(wrapper.find('p').classes()).toContain('default-arrow')
   })
 })
