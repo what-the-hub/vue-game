@@ -33,7 +33,7 @@ export default class Arrow extends Vue {
   mounted () {
     this.$el.addEventListener('animationend', () => {
       this.deleteLastArrow()
-      this.$destroy()
+      this.$destroy() // may be deleted, need to investigated
     })
   }
 

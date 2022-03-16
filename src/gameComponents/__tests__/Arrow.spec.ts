@@ -1,34 +1,29 @@
 import { shallowMount, Wrapper } from '@vue/test-utils'
-
 import Arrow from '@/gameComponents/Arrow.vue'
-import { EGetterArrow } from '@/store/modules/arrow/typesArrow'
-
+import { EActionArrow, EGetterArrow } from '@/store/modules/arrow/typesArrow'
 import { StoreModuleEnum } from '@/store/types'
 import { BIcon } from 'bootstrap-vue'
 import { EDirection } from '@/types'
 
-// eslint-disable-next-line camelcase
 const baseMocks = {
   $store: {
     getters: {
       [`${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`]: { id: 1, direction: EDirection.ArrowDown }
     },
-    dispatch: () => jest.fn()
+    dispatch: jest.fn()
   }
 }
 
 describe('Arrow.vue', () => {
   let wrapper: Wrapper<Arrow>
   let vm: Arrow|any
-  const deleteLastArrow = jest.fn()
 
   beforeEach(() => {
     wrapper = shallowMount(Arrow, {
       mocks: baseMocks,
       components: {
         'b-icon': BIcon
-      },
-      methods: { deleteLastArrow }
+      }
     })
     vm = wrapper.vm
   })
@@ -48,17 +43,32 @@ describe('Arrow.vue', () => {
 
   it('should call dispatch on deleteLastArrow', () => {
     vm.deleteLastArrow()
-    setTimeout(() => {
-      expect(vm.$store.dispatch).toHaveBeenCalled()
-    }, 0)
+    expect(vm.$store.dispatch)
+      .toHaveBeenCalledWith(
+        `${StoreModuleEnum.arrowStore}/${EActionArrow.DELETE_ARROW}`
+      )
   })
 
   it('should return last arrow data', () => {
-    expect(vm.getLastArrow()).toEqual({ id: 1, direction: EDirection.ArrowDown })
+    expect(vm.getLastArrow()).toEqual({
+      id: 1,
+      direction: EDirection.ArrowDown
+    })
   })
 
   it('should  call deleteLastArrow after animationend event', () => {
+    vm.deleteLastArrow = jest.fn()
     wrapper.trigger('animationend')
-    expect(deleteLastArrow).toHaveBeenCalled()
+    expect(vm.deleteLastArrow).toHaveBeenCalled()
+  })
+
+  it('should destroy after animationend event', () => {
+    vm.$destroy = jest.fn()
+    wrapper.trigger('animationend')
+    expect(vm.$destroy).toHaveBeenCalled()
+  })
+
+  it('=p= should have necessary class', () => {
+    expect(wrapper.find('p').classes()).toContain('default-arrow')
   })
 })

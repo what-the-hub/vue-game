@@ -26,6 +26,7 @@ export const actions: ActionTree<IStateUser, RootStateInterface> & Actions = {
     } else throw new Error('There are no authorised users')
   },
   [EActionUser.UPDATE_DB_SCORE]: async ({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     commit
     , dispatch, getters
   }, payload) => {
