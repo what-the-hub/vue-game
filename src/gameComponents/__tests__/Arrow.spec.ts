@@ -8,7 +8,10 @@ import { EDirection } from '@/types'
 const baseMocks = {
   $store: {
     getters: {
-      [`${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`]: { id: 1, direction: EDirection.ArrowDown }
+      [`${StoreModuleEnum.arrowStore}/${EGetterArrow.GET_LAST_ITEM}`]: {
+        id: 1,
+        direction: EDirection.ArrowDown
+      }
     },
     dispatch: jest.fn()
   }
