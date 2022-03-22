@@ -31,11 +31,19 @@ describe('Areas.vue', () => {
     vm = wrapper.vm
   })
 
-  it('test animationStyle', async () => {
+  it('animationStyle must consist necessary style', () => {
     expect(vm.animationStyle).toEqual({
       good: '',
       excellent: 'excellent-animation'
     })
+  })
+
+  it('emit should exist and return necessary obj', async () => {
+    vm.$emit('calculate-positions')
+    await Vue.nextTick()
+    expect(wrapper.emitted('calculate-positions')).toHaveLength(2)
+    expect(wrapper.emitted('calculate-positions')).toEqual([[{ bottomExcellentArea: 0, bottomGoodArea: 0, topExcellentArea: 0, topGoodArea: 0 }], []]
+    )
   })
 })
 
@@ -67,6 +75,10 @@ describe('Areas.vue', () => {
 
   it('should find necessary style', function () {
     expect(wrapper.find('#good').classes()).toContain('good-animation')
+  })
+
+  it('should not find necessary style', function () {
+    expect(wrapper.find('#excellent').classes()).not.toContain('good-animation')
   })
 
   jest.useFakeTimers()
