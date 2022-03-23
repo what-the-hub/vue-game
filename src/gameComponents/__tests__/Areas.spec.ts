@@ -42,8 +42,15 @@ describe('Areas.vue', () => {
     vm.$emit('calculate-positions')
     await Vue.nextTick()
     expect(wrapper.emitted('calculate-positions')).toHaveLength(2)
-    expect(wrapper.emitted('calculate-positions')).toEqual([[{ bottomExcellentArea: 0, bottomGoodArea: 0, topExcellentArea: 0, topGoodArea: 0 }], []]
-    )
+    expect(wrapper.emitted('calculate-positions')).toMatchObject([
+      [{
+        bottomExcellentArea: 0,
+        bottomGoodArea: 0,
+        topExcellentArea: 0,
+        topGoodArea: 0
+      }],
+      []
+    ])
   })
 })
 
@@ -67,7 +74,7 @@ describe('Areas.vue', () => {
 
   it('should update necessary style', async () => {
     await Vue.nextTick()
-    expect(vm.animationStyle).toEqual({
+    expect(vm.animationStyle).toMatchObject({
       good: 'good-animation',
       excellent: 'excellent-animation'
     })
